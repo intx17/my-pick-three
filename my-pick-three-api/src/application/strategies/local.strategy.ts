@@ -15,7 +15,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     const inputData: AuthValidateUserInputData = {
       name,
       password
-    }
+    };
 
     const output = await this.interactor.handleValidateUserAsync(inputData);
     if (!output.user) {

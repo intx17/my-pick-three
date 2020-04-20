@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { UsersController } from 'src/controllers/users.controller'
-import { UsersInteractor } from 'src/application/usecases/users/users.interactor'
-import { UsersModule } from './users.module'
-import { User } from '../domain/entities/user.entity'
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersController } from 'src/controllers/users.controller';
+import { UsersInteractor } from 'src/application/usecases/users/users.interactor';
+import { UsersModule } from './users.module';
+import { User } from '../domain/entities/user.entity';
 
 @Module({
   imports: [

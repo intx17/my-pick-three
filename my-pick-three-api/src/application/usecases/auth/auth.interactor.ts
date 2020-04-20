@@ -12,14 +12,14 @@ export class AuthInteractor implements IAuthUseCase {
         const output = await this.usersInteractor.handleFindOneByName({
             name: inputData.name,
         });
-        const user = output.user
+        const user = output.user;
         if (user && user.password === inputData.password) {
             return {
                 user
-            }
+            };
         }
         return {
             user: null
-        }
+        };
     }
 }
