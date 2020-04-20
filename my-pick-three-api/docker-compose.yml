@@ -6,7 +6,7 @@ services:
     tty: true
     restart: always
     ports:
-      - '3000:3000'
+      - 3000:3000
     volumes:
       - type: bind
         source: .
@@ -15,14 +15,12 @@ services:
       - db-server
   db-server:
     container_name: db-server
-    image: microsoft/mssql-server-linux:2017-latest
-    environment:
-      ACCEPT_EULA: Y
-      MSSQL_SA_PASSWORD: YourStrong!Passw0rd # ※のちに再設定するパスワード
-    volumes:
-      - db-volume:/var/opt/mssql/
+    image: mysql:5.7.29
+    restart: always
     ports:
-      - '1433:1433'
-volumes:
-    db-volume:
-        driver: local
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: develop
+      MYSQL_USER: develop
+      MYSQL_PASSWORD: password
