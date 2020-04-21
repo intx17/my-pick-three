@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CredentialsDto {
     @ApiProperty()
     @IsString()
-    readonly userName: string;
+    readonly username: string;
 
     @ApiProperty()
     @IsString()

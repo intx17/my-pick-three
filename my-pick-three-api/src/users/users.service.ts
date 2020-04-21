@@ -10,13 +10,13 @@ export class UsersService {
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {
     }
 
-    public async findByUserName(req: FindByNameUserRequestDto): Promise<User> {
-        return await this.userRepository.findOne({userName: req.userName});
+    public async findByusername(req: FindByNameUserRequestDto): Promise<User> {
+        return await this.userRepository.findOne({username: req.username});
     }
 
     public async save(req: SaveUserRequestDto): Promise<User> {
         const user = new User();
-        user.userName = req.userName;
+        user.username = req.username;
         user.password = req.password;
 
         const savedUser = await this.userRepository.save(user)

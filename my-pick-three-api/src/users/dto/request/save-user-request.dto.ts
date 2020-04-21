@@ -5,7 +5,7 @@ export class SaveUserRequestDto {
     @IsDefined({ always: true })
     @IsString({ always: true })
     @ApiProperty()
-    userName: string
+    username: string
 
     @IsDefined({ always: true })
     @IsString({ always: true })

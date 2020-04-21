@@ -10,7 +10,7 @@ export class User {
   @Column({ unique: true })
   @IsDefined({ always: true })
   @IsString({ always: true})
-  userName: string;
+  username: string;
 
   @Column()
   @IsDefined({ always: true })

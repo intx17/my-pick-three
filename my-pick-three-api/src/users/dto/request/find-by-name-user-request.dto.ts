@@ -5,5 +5,5 @@ export class FindByNameUserRequestDto {
     @ApiProperty()
     @IsDefined({ always: true })
     @IsString({ always: true })
-    userName: string
+    username: string
 }

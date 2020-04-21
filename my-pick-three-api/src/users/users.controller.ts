@@ -15,8 +15,8 @@ export class UsersController {
     @Post()
 	@HttpCode(200)
     @ApiResponse({ status: 200, description: 'OK', type: User })
-    async findByUserName(@Body() req: FindByNameUserRequestDto) {
-        return await this.usersService.findByUserName(req);
+    async findByusername(@Body() req: FindByNameUserRequestDto) {
+        return await this.usersService.findByusername(req);
     }
 
     @Put('/save')

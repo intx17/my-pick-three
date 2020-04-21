@@ -10,7 +10,8 @@ export class AuthService {
     }
 
     async validateUser(credentials: CredentialsDto): Promise<User> {
-        const user = await this.userRepository.findOne({userName: credentials.userName});
+        const user = await this.userRepository.findOne({username: credentials.username});
+        console.log(user);
         if (user && user.password === credentials.password) {
             return user;
         }
