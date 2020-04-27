@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/users/user.entity';
 import { CredentialsDto } from './dto/credentials.dto';
@@ -12,8 +13,9 @@ export class AuthService {
     async validateUser(credentials: CredentialsDto): Promise<User> {
         const user = await this.userRepository.findOne({username: credentials.username});
         console.log(user);
-        if (user && user.password === credentials.password) {
-            return user;
+        if (user) {
+            const isMatched = await bcrypt.compare(credentials.password, user.password);
+            return isMatched ? user : null;
         }
         return null;
     }

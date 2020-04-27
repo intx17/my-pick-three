@@ -6,4 +6,4 @@ WORKDIR /workspace
 COPY package*.json /workspace/
 
 RUN npm i
-CMD [ "npm", "run", "start:dev"]
+CMD [ "npm", "run", "start:debug"]

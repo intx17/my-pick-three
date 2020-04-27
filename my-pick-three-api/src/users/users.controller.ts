@@ -19,7 +19,7 @@ export class UsersController {
         return await this.usersService.findByusername(req);
     }
 
-    @Put('/save')
+    @Put('save')
 	@HttpCode(200)
     @ApiResponse({ status: 200, description: 'OK', type: User })
     async save(@Body() req: SaveUserRequestDto) {

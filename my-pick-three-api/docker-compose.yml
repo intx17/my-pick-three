@@ -1,26 +1,28 @@
 version: '3.7'
 services:
-  api-server:
-    container_name: api-server
-    build: .
-    tty: true
-    restart: always
-    ports:
-      - 3000:3000
-    volumes:
-      - type: bind
-        source: .
-        target: /workspace
-    depends_on:
-      - db-server
+  # api-server:
+  #   container_name: api-server
+  #   build: .
+  #   tty: true
+  #   restart: always
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - type: bind
+  #       source: .
+  #       target: /workspace
+  #   depends_on:
+  #     - db-server
   db-server:
     container_name: db-server
     image: mysql:5.7.29
     restart: always
     ports:
-      - 3306:3306
+      - "127.0.0.1:3306:3306"
+    env_file:
+      - .env
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: develop
-      MYSQL_USER: develop
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USER}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'

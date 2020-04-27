@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from 'src/users/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,9 +16,18 @@ export class UsersService {
     }
 
     public async save(req: SaveUserRequestDto): Promise<User> {
+        const userExists = await this.userRepository.count({ username: req.username}) >= 1;
+        if (userExists) {
+            throw new HttpException({
+				error: 'User',
+				message: 'The user already exists.'
+			}, HttpStatus.BAD_REQUEST); 
+        }
+
+        const encryptedPassword = await bcrypt.hash(req.password, 10);
         const user = new User();
         user.username = req.username;
-        user.password = req.password;
+        user.password = encryptedPassword;
 
         const savedUser = await this.userRepository.save(user)
             .catch(_ => {

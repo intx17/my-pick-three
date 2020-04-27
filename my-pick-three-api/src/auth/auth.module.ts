@@ -8,7 +8,6 @@ import { User } from 'src/users/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), PassportModule],
-  // exports: [TypeOrmModule],
   providers: [AuthService, LocalStrategy],
   controllers: [AuthController]
 })
