@@ -8,8 +8,10 @@ import { SaveUserRequestDto } from './dto/request/save-user-request.dto';
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {
-    }
+    constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>
+    ) {}
 
     public async findByusername(req: FindByNameUserRequestDto): Promise<User> {
         return await this.userRepository.findOne({username: req.username});
