@@ -1,18 +1,5 @@
 version: '3.7'
 services:
-  # api-server:
-  #   container_name: api-server
-  #   build: .
-  #   tty: true
-  #   restart: always
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - type: bind
-  #       source: .
-  #       target: /workspace
-  #   depends_on:
-  #     - db-server
   db-server:
     container_name: db-server
     image: mysql:5.7.29
