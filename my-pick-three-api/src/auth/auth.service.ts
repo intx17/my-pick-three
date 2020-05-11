@@ -1,10 +1,10 @@
-import * as bcrypt from 'bcrypt';
-import { Injectable } from '@nestjs/common';
-import { User } from 'src/users/user.entity';
-import { CredentialsDto } from './dto/credentials.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { JwtService } from '@nestjs/jwt';
-import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt'
+import { Injectable } from '@nestjs/common'
+import { User } from 'src/users/user.entity'
+import { CredentialsDto } from './dto/credentials.dto'
+import { InjectRepository } from '@nestjs/typeorm'
+import { JwtService } from '@nestjs/jwt'
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class AuthService {
@@ -16,19 +16,19 @@ export class AuthService {
     {}
 
     async validateUser(credentials: CredentialsDto): Promise<User> {
-        const user = await this.userRepository.findOne({username: credentials.username});
-        console.log(user);
+        const user = await this.userRepository.findOne({username: credentials.username})
+        console.log(user)
         if (user) {
-            const isMatched = await bcrypt.compare(credentials.password, user.password);
-            return isMatched ? user : null;
+            const isMatched = await bcrypt.compare(credentials.password, user.password)
+            return isMatched ? user : null
         }
-        return null;
+        return null
     }
 
     async login(user: User) {
-        const payload = { username: user.username, sub: user.id };
+        const payload = { username: user.username, sub: user.id }
         return {
           accessToken: this.jwtService.sign(payload),
-        };
+        }
       }
 }
