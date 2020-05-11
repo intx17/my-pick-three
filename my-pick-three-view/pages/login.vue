@@ -60,8 +60,8 @@ body {
 .container {
   margin-top: 120px;
   display: flex;
-  flex-direction: column; /* 子要素をflexboxにより縦方向に揃える */
-  justify-content: center; /* 子要素をflexboxにより中央に配置する */
+  flex-direction: column;
+  justify-content: center;
   border: 1px solid #9C9C9C;
   background-color: #EAEAEA;
 }

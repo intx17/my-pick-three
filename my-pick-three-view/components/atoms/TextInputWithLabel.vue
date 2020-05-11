@@ -1,7 +1,7 @@
 <template>
   <div class="form-group row">
-    <label for="username" class="col-sm-2 text-info">{{ labelText }}</label>
-    <div class="col-sm-10">
+    <label for="username" class="col-sm-1 col-form-label text-info text-center">{{ labelText }}</label>
+    <div class="col-sm-4">
       <input v-model="syncedValue" type="text" class="form-control">
     </div>
   </div>
