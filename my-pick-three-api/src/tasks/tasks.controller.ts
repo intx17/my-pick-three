@@ -15,7 +15,7 @@ export class TasksController {
     @Post()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'OK', type: Task })
-    async findByusername(@Body() req: FindTaskRequestDto) {
+    async find(@Body() req: FindTaskRequestDto) {
         return await this.tasksService.find(req)
     }
 

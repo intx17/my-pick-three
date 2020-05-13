@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt'
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common'
-import { User } from 'src/users/user.entity'
+import { User } from './user.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { FindUserByNameRequestDto } from './dto/request/find-user-by-name.dto.request'

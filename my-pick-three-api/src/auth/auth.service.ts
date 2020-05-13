@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt'
 import { Injectable } from '@nestjs/common'
-import { User } from 'src/users/user.entity'
+import { User } from '../users/user.entity'
 import { CredentialsDto } from './dto/credentials.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { JwtService } from '@nestjs/jwt'
