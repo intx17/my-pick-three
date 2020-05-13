@@ -6,6 +6,8 @@ import { repositoryMockFactory, MockType } from '../../test/mock-factory'
 import { Repository } from 'typeorm'
 import { FindTaskResponseDto } from '../../src/tasks/dto/response/find-task.dto.response'
 import { FindTaskRequestDto } from '../../src/tasks/dto/request/find-task.dto.request'
+import { SaveTaskRequestDto } from '../../src/tasks/dto/request/save-task.dto.request'
+import { SaveTaskResponseDto } from '../../src/tasks/dto/response/save-task.dto.response'
 
 describe('TasksService', () => {
   let service: TasksService
@@ -46,7 +48,7 @@ describe('TasksService', () => {
       const expected: FindTaskResponseDto = {
         task: task
       }
-      expect(await service.find(request)).toStrictEqual(expected)
+      expect(await service.find(request)).toMatchObject(expected)
       // check arg
       expect(mockRepository.findOne).toHaveBeenCalledWith({id: task.id})
     })
@@ -59,7 +61,47 @@ describe('TasksService', () => {
       }
 
       const expected: FindTaskResponseDto = new FindTaskResponseDto()
-      expect(await service.find(request)).toStrictEqual(expected)
+      expect(await service.find(request)).toMatchObject(expected)
+    })
+  })
+
+  describe('save', () => {
+    it('should return success response', async () => {
+      mockRepository.save.mockImplementation(task => {
+        const innerTask = new Task()
+        innerTask.id = 1
+        innerTask.name = task.name
+        return innerTask
+      })
+
+      const request: SaveTaskRequestDto = {
+        name: 'saved1'
+      }
+
+      const expected: SaveTaskResponseDto = {
+        task: {
+          id: 1,
+          name: 'saved1'
+        }
+      }
+      console.log(expected)
+      expect(await service.save(request)).toMatchObject(expected)
+      // check arg
+      expect(mockRepository.save).toHaveBeenCalledWith({name: 'saved1'})
+    })
+
+    it('should return empty response', async () => {
+      mockRepository.save.mockImplementation(task => {
+        task.id = 1
+        return task
+      })
+
+      const request: SaveTaskRequestDto = {
+        name: null
+      }
+
+      const expected: SaveTaskResponseDto = new SaveTaskResponseDto()
+      expect(await service.save(request)).toMatchObject(expected)
     })
   })
 })
