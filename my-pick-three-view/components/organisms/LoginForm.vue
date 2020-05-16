@@ -14,11 +14,15 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+
+// components
 import EmailInputWithLabel from '@/components/atoms/EmailInputWithLabel.vue'
 import PasswordInputWithLabel from '@/components/atoms/PasswordInputWithLabel.vue'
 import BlueOutlinedButton from '@/components/atoms/BlueOutlinedButton.vue'
 
-import firebase from '@/plugins/firebase'
+// store
+import { authStore } from '@/store'
+
 @Component({
   components: {
     EmailInputWithLabel,
@@ -32,9 +36,20 @@ export default class Login extends Vue {
 
   async login () {
     try {
-      await firebase
-        .auth()
+      const userCredential = await this.$auth
         .signInWithEmailAndPassword(this.email, this.password)
+
+      const user = userCredential.user
+
+      // storeにユーザー格納
+      authStore.updateUserEmail(user?.email)
+
+      // IDトークン（JWT）取得
+      const token = await user?.getIdToken()
+      // ローカルストレージ, storeに保存
+      if (token) {
+        localStorage.setItem('token', token)
+      }
 
       // Jump to Home
       this.$router.push('/')

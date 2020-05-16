@@ -10,9 +10,11 @@
 import { Vue, Component } from 'vue-property-decorator'
 import LoginForm from '@/components/organisms/LoginForm.vue'
 
-import firebase from '~/plugins/firebase'
-
 @Component({
+  layout: 'login',
+  head: {
+    title: 'ログイン'
+  },
   components: {
     LoginForm
   }

@@ -40,7 +40,7 @@ const config = {
       },
       {
         test: /\.vue$/,
-        loader: 'storybook-addon-vue-info/loader',
+        loader: 'vue-docgen-loader',
         enforce: 'post'
       }
     ],

@@ -1,5 +1,4 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
-import { Auth } from 'nuxtjs__auth'
 require('dotenv').config()
 
 export default {
@@ -35,6 +34,10 @@ export default {
   ** Global CSS
   */
   css: [
+    {
+      src: '~assets/css/main.scss',
+      lang: 'scss'
+    }
   ],
   postcss: {
     plugins: {
@@ -55,7 +58,6 @@ export default {
   */
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/auth',
     '@nuxtjs/proxy',
     '@nuxtjs/dotenv',
     '@nuxtjs/bulma',
@@ -120,7 +122,6 @@ export default {
 // this.$axios 等に必要
 declare module 'vue/types/vue' {
   interface Vue {
-    $auth: Auth
     $axios: NuxtAxiosInstance
   }
 }

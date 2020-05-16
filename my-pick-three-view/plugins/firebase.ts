@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import { Plugin } from '@nuxt/types'
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -16,4 +17,43 @@ if (!firebase.apps.length) {
   firebase.auth().useDeviceLanguage()
 }
 
-export default firebase
+declare module 'vue/types/vue' {
+  interface Vue {
+    $firebase: any,
+    $auth: firebase.auth.Auth,
+    $db: firebase.database.Database,
+    // $storage: any,
+    $currentUser: firebase.User | null
+  }
+}
+
+declare module '@nuxt/types' {
+  interface NuxtAppOptions {
+    $firebase:any,
+    $auth: firebase.auth.Auth,
+    $db: firebase.database.Database,
+    // $storage: any,
+    $currentUser: firebase.User | null
+  }
+}
+
+declare module 'vuex/types/index' {
+  interface Store<S> {
+    $firebase:any,
+    $auth: firebase.auth.Auth,
+    $db: firebase.database.Database,
+    // $storage: any,
+    $currentUser: firebase.User | null
+}}
+
+// inject plugins
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const firebasePlugin: Plugin = (context, inject) => {
+  inject('firebase', firebase)
+  inject('auth', firebase.auth())
+  inject('db', firebase.firestore())
+  // inject('storage', firebase.storage())
+  inject('currentUser', firebase.auth().currentUser)
+}
+
+export default firebasePlugin

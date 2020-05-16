@@ -24,10 +24,10 @@
     },
     "types": [
       "@types/node",
-      "@nuxt/types",
-      "@types/nuxtjs__auth"
+      "@nuxt/types"
     ],
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "importHelpers": true
   },
   "exclude": [
     "node_modules"

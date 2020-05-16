@@ -1,22 +1,8 @@
 <template>
   <div>
-    <navbar />
     <nuxt />
-    <page-footer />
   </div>
 </template>
-
-<script>
-import Navbar from '@/components/organisms/Navbar.vue'
-import PageFooter from '@/components/organisms/PageFooter.vue'
-
-export default {
-  components: {
-    Navbar,
-    PageFooter
-  }
-}
-</script>
 
 <style>
 html {
