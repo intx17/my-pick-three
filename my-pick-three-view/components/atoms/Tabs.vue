@@ -12,7 +12,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 // components interface
-import { ITab } from '@/src/components/atoms/tabs'
+import { ITab } from '~/src/components/atoms/tabs'
 
 @Component({})
 export default class Tabs extends Vue {

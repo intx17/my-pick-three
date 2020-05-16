@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/vue'
 import { withInfo } from 'storybook-addon-vue-info'
 import { withKnobs, text } from '@storybook/addon-knobs'
-import EmailInputWithLabel from '@/components/atoms/EmailInputWithLabel.vue'
+import EmailInputWithLabel from '~/components/atoms/EmailInputWithLabel.vue'
 
 storiesOf('atoms', module)
   .addDecorator(withKnobs)

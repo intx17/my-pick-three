@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/vue'
 import { withInfo } from 'storybook-addon-vue-info'
 import { withKnobs, text as knobsText } from '@storybook/addon-knobs'
-import CircleButton from '@/components/atoms/CircleButton.vue'
+import CircleButton from '~/components/atoms/CircleButton.vue'
 
 storiesOf('atoms', module)
   .addDecorator(withKnobs)

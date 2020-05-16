@@ -51,7 +51,8 @@ const config = {
   resolve: {
     extensions: ['.ts', '.js', '.vue', '.json'],
     alias: {
-      '@': rootPath
+      '@': rootPath,
+      '~': rootPath
     }
   }
 }

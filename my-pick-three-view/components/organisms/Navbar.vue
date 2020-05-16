@@ -44,7 +44,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 
 // store
-import { authStore } from '@/store'
+import { authStore } from '~/store'
 
 @Component({})
 export default class NavBar extends Vue {

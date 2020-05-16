@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import LoginForm from '@/components/organisms/LoginForm.vue'
+import LoginForm from '~/components/organisms/LoginForm.vue'
 
 @Component({
   layout: 'login',

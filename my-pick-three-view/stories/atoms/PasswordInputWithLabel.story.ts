@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/vue'
 import { withInfo } from 'storybook-addon-vue-info'
 import { withKnobs, text } from '@storybook/addon-knobs'
-import PasswordInputWithLabel from '@/components/atoms/PasswordInputWithLabel.vue'
+import PasswordInputWithLabel from '~/components/atoms/PasswordInputWithLabel.vue'
 
 storiesOf('atoms', module)
   .addDecorator(withKnobs)

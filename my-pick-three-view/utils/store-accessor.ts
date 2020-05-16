@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Store } from 'vuex'
 import { getModule } from 'vuex-module-decorators'
-import AuthStore from '@/store/auth'
+import AuthStore from '~/store/auth'
 
 // eslint-disable-next-line import/no-mutable-exports
 let authStore: AuthStore

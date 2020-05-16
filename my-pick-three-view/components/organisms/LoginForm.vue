@@ -16,12 +16,12 @@
 import { Vue, Component } from 'vue-property-decorator'
 
 // components
-import EmailInputWithLabel from '@/components/atoms/EmailInputWithLabel.vue'
-import PasswordInputWithLabel from '@/components/atoms/PasswordInputWithLabel.vue'
-import BlueOutlinedButton from '@/components/atoms/BlueOutlinedButton.vue'
+import EmailInputWithLabel from '~/components/atoms/EmailInputWithLabel.vue'
+import PasswordInputWithLabel from '~/components/atoms/PasswordInputWithLabel.vue'
+import BlueOutlinedButton from '~/components/atoms/BlueOutlinedButton.vue'
 
 // store
-import { authStore } from '@/store'
+import { authStore } from '~/store'
 
 @Component({
   components: {

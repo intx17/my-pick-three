@@ -3,10 +3,10 @@ import { withInfo } from 'storybook-addon-vue-info'
 import { withKnobs, object } from '@storybook/addon-knobs'
 
 // components
-import Tabs from '@/components/atoms/Tabs.vue'
+import Tabs from '~/components/atoms/Tabs.vue'
 
 // component interfaces
-import { ITab } from '@/src/components/atoms/tabs'
+import { ITab } from '~/src/components/atoms/tabs'
 
 const tabs: ITab[] = [
   {
