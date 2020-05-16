@@ -18,7 +18,7 @@ import EmailInputWithLabel from '@/components/atoms/EmailInputWithLabel.vue'
 import PasswordInputWithLabel from '@/components/atoms/PasswordInputWithLabel.vue'
 import BlueOutlinedButton from '@/components/atoms/BlueOutlinedButton.vue'
 
-import firebase from '~/plugins/firebase'
+import firebase from '@/plugins/firebase'
 @Component({
   components: {
     EmailInputWithLabel,
@@ -32,8 +32,6 @@ export default class Login extends Vue {
 
   async login () {
     try {
-      console.log(this.email)
-      console.log(this.password)
       await firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
