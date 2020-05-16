@@ -1,72 +1,25 @@
 <template>
-  <div>
-    <div class="container">
-      <h3 class="text-center text-info">Login</h3>
-      <form>
-        <text-input-with-label
-          :label-text="'UserName:'"
-          :value.sync="username"
-        />
-        <text-input-with-label
-          :label-text="'Password:'"
-          :value.sync="password"
-        />
-        <div class="form-group row">
-          <div class="col-sm-12 text-right">
-            <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
-          </div>
-        </div>
-      </form>
+  <section class="hero is-info is-fullheight">
+    <div class="hero-body">
+      <login-form />
     </div>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import TextInputWithLabel from '@/components/atoms/TextInputWithLabel.vue'
+import LoginForm from '@/components/organisms/LoginForm.vue'
+
+import firebase from '~/plugins/firebase'
 
 @Component({
   components: {
-    TextInputWithLabel
+    LoginForm
   }
 })
 export default class Login extends Vue {
-  private username: string = ''
-  private password: string = ''
-
-  async login () {
-    try {
-      await this.$auth.loginWith('local', {
-        data: {
-          username: this.username,
-          password: this.password
-        }
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
 }
 </script>
 
 <style scoped>
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #17a2b8;
-  height: 100vh;
-}
-
-.container {
-  margin-top: 120px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border: 1px solid #9C9C9C;
-  background-color: #EAEAEA;
-}
-
-h3 {
-  margin-top: 20px;
-}
 </style>

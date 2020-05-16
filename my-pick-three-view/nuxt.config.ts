@@ -1,5 +1,6 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
 import { Auth } from 'nuxtjs__auth'
+require('dotenv').config()
 
 export default {
   mode: 'spa',
@@ -21,6 +22,9 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+  router: {
+    // middleware: ['authMiddleWare']
+  },
 
   /*
   ** Customize the progress-bar color
@@ -32,32 +36,37 @@ export default {
   */
   css: [
   ],
-
+  postcss: {
+    plugins: {
+      'postcss-custom-properties': {
+        warnings: false
+      }
+    }
+  },
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/firebase'
   ],
 
   /*
   ** Nuxt.js modules
   */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-
-    // Doc: https://bootstrap-vue.js.org/docs/
-    'bootstrap-vue/nuxt',
     '@nuxtjs/auth',
-    '@nuxtjs/proxy'
+    '@nuxtjs/proxy',
+    '@nuxtjs/dotenv',
+    '@nuxtjs/bulma',
+    '@nuxtjs/font-awesome'
   ],
   buildModules: ['@nuxt/typescript-build'],
   /*
   ** Axios module configuration
   */
   axios: {
-    // See https://github.com/nuxt-community/axios-module#options
-    baseURL: 'http://localhost:8000/v1'
+    baseURL: process.env.DATABASE_URL
   },
   proxy: {
     '/v1/': {

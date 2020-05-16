@@ -1,6 +1,7 @@
 const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const rootPath = path.resolve(__dirname, '../')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const config = {
   module: {
@@ -21,6 +22,21 @@ const config = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader'
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true
+            }
+          }
+        ]
       },
       {
         test: /\.vue$/,
