@@ -11,7 +11,7 @@
       <p class="control has-icons-left">
         <input class="input is-info" type="text" placeholder="Search">
         <span class="icon is-left">
-          <i class="fas fa-search" aria-hidden="true" />
+          <fa icon="search" aria-hidden="true" />
         </span>
       </p>
     </div>
@@ -21,7 +21,7 @@
       class="panel-block"
     >
       <span class="panel-icon">
-        <i class="fas fa-book" aria-hidden="true" />
+        <fa icon="tasks" aria-hidden="true" />
       </span>
       {{ item.name }}
     </a>

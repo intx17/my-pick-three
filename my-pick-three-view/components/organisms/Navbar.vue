@@ -78,7 +78,7 @@ export default class NavBar extends Vue {
   async logout () {
     try {
       await this.$auth.signOut()
-      authStore.updateUserEmail(null)
+      authStore.updateUserByEmail(null)
       window.localStorage.setItem('token', '')
     } catch (err) {
       window.alert(err.message)

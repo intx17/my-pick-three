@@ -6,7 +6,7 @@ import { withKnobs, object } from '@storybook/addon-knobs'
 import TaskCards from '~/components/molecules/TaskCards.vue'
 
 // component interfaces
-import { ITaskCard } from '~/src/components/molecules/taskCards'
+import { ITaskCard } from '~/src/components/molecules/task-cards'
 
 const tasks: ITaskCard[] = [
   {

@@ -44,7 +44,7 @@ export default class Login extends Vue {
       const user = userCredential.user
 
       // storeにユーザー格納
-      authStore.updateUserEmail(user?.email)
+      authStore.updateUserByEmail(user?.email)
 
       // IDトークン（JWT）取得
       const token = await user?.getIdToken()

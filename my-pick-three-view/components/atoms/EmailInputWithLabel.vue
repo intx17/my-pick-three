@@ -1,6 +1,6 @@
 <template>
   <div class="field">
-    <label for class="label">{{ labelText }}</label>
+    <label class="label">{{ labelText }}</label>
     <div class="control has-icons-left">
       <input
         v-model="syncedValue"

@@ -21,7 +21,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import Card from '@/components/atoms/Card.vue'
 
 // components interface
-import { ITaskCard } from '@/src/components/molecules/taskCards'
+import { ITaskCard } from '~/src/components/molecules/task-cards'
 
 @Component({
   components: {

@@ -1,16 +1,14 @@
 <template>
   <div class="field">
     <label class="label">{{ labelText }}</label>
-    <div class="control has-icons-left">
+    <div class="control">
       <input
         v-model="syncedValue"
-        type="password"
+        type="text"
+        placeholder="e.g. training"
         class="input"
         required
       >
-      <span class="icon is-small is-left">
-        <i class="fa fa-key" />
-      </span>
     </div>
   </div>
 </template>
@@ -19,7 +17,7 @@
 import { Vue, Component, PropSync, Prop } from 'vue-property-decorator'
 
 @Component({})
-export default class PasswordInputWithLabel extends Vue {
+export default class EmailInputWithLabel extends Vue {
   @PropSync('value', { type: String, required: true })
   private syncedValue!: string;
 

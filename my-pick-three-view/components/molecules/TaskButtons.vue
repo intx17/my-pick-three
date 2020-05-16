@@ -1,16 +1,19 @@
 <template>
-  <div class="columns">
-    <div class="column is-one-third is-mobile">
+  <div class="columns is-mobile is-centered">
+    <div class="column is-hal">
       <a
-        @click="openModal"
+        @click="openSelectModal"
         class="button is-info"
       >
-        Search
+        今日のタスク選択
       </a>
+    </div>
+    <div class="column is-half">
       <a
-        class="button is-info is-one-quarter"
+        @click="openEditModal"
+        class="button is-info"
       >
-        Button2
+        タスク新規登録
       </a>
     </div>
   </div>
@@ -31,6 +34,9 @@ import InfoButton from '@/components/atoms/InfoButton.vue'
 })
 export default class TaskButtons extends Vue {
   @Emit()
-  private openModal () {}
+  private openSelectModal () {}
+
+  @Emit()
+  private openEditModal () {}
 }
 </script>
