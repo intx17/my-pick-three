@@ -33,6 +33,3 @@ export default class TaskCards extends Vue {
   private tasks!: ITaskCard[]
 }
 </script>
-
-<style scoped>
-</style>

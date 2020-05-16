@@ -1,15 +1,15 @@
 <template>
   <div class="container">
     <task-cards :tasks="tasks"/>
-    <div class="columns is-mobile is-multiline is-centered">
-      <div class="column is-11">
-        <panel
-          :title="'タスク候補'"
-          :categories="panelCategories"
-          :items="panelItems"
-        />
-      </div>
-    </div>
+    <task-buttons @open-modal="openModal" />
+    <modal-wrapper :is-active.sync="isModalOpen">
+      <panel
+        :title="'タスク候補'"
+        :categories="panelCategories"
+        :items="panelItems"
+        class="has-background-white"
+      />
+    </modal-wrapper>
   </div>
 </template>
 
@@ -18,6 +18,8 @@ import { Vue, Component } from 'vue-property-decorator'
 
 // components
 import TaskCards from '~/components/molecules/TaskCards.vue'
+import TaskButtons from '~/components/molecules/TaskButtons.vue'
+import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
 import Panel from '~/components/atoms/Panel.vue'
 
 // components interface
@@ -28,7 +30,7 @@ import { IPanelItem } from '~/src/components/atoms/panel'
 import authenticated from '~/middleware/authenticated'
 
 @Component({
-  layout: 'HOME',
+  layout: 'default',
   head: {
     title: 'ホーム'
   },
@@ -37,10 +39,14 @@ import authenticated from '~/middleware/authenticated'
   ],
   components: {
     TaskCards,
+    TaskButtons,
+    ModalWrapper,
     Panel
   }
 })
 export default class Index extends Vue {
+  private isModalOpen: boolean = false
+
   private tasks: ITaskCard[] = [
     {
       taskTitle: 'Title1',
@@ -78,5 +84,10 @@ export default class Index extends Vue {
       name: 'Four'
     }
   ]
+
+  // methods
+  private openModal () {
+    this.isModalOpen = true
+  }
 }
 </script>

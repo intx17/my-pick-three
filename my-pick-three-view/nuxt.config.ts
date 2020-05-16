@@ -37,7 +37,8 @@ export default {
     {
       src: '~assets/css/main.scss',
       lang: 'scss'
-    }
+    },
+    '@fortawesome/fontawesome-svg-core/styles.css'
   ],
   postcss: {
     plugins: {
@@ -50,7 +51,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/firebase'
+    '~/plugins/firebase',
+    '~/plugins/fontawesome'
   ],
 
   /*

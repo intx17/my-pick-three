@@ -3,19 +3,21 @@
     <header class="card-header">
       <p class="card-header-title has-background-light">{{ title }}</p>
       <a href="#" class="card-header-icon" aria-label="more options">
-        <span class="icon">
-          <i class="fas fa-angle-down" aria-hidden="true" />
+        <span v-if="isContentShown" @click="hideContent" class="icon">
+          <fa icon="angle-down" area-hidden="true" />
+        </span>
+        <span v-else @click="showContent" class="icon">
+          <fa icon="angle-up" area-hidden="true" />
         </span>
       </a>
     </header>
-    <div class="card-content">
+    <div v-show="isContentShown" class="card-content">
       <div class="content">
         {{ detail }}
       </div>
     </div>
     <footer class="card-footer">
       <a
-        :disabled="done"
         href="#"
         class="card-footer-item has-background-primary has-text-white"
       >Done</a>
@@ -29,6 +31,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({})
 export default class Card extends Vue {
+  private isContentShown: boolean = true
+
   @Prop({ type: String, required: true })
   private title!: string
 
@@ -37,6 +41,26 @@ export default class Card extends Vue {
 
   @Prop({ type: Boolean, required: true, default: false })
   private done!: boolean
+
+  // computed
+  get contentDisplay () {
+    return this.isContentShown ? 'normal' : 'none'
+  }
+
+  get cardContentAdditionalStyle () {
+    return {
+      display: this.contentDisplay
+    }
+  }
+
+  // methods
+  private showContent () {
+    this.isContentShown = true
+  }
+
+  private hideContent () {
+    this.isContentShown = false
+  }
 }
 </script>
 

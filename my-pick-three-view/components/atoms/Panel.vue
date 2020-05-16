@@ -46,3 +46,19 @@ export default class Panel extends Vue {
   private items!: IPanelItem[]
 }
 </script>
+
+<style scoped>
+.panel {
+  /* パネルの下部分が不自然なので修正 */
+  padding-bottom: 0.5rem;
+}
+@media screen and (max-width:768px) {
+  .panel {
+    /* タブレット・スマホで左右にマージンをつける */
+    margin: 0px 1rem;
+  }
+}
+.panel-block:last-child {
+    border-bottom: 1px solid #ededed;
+}
+</style>

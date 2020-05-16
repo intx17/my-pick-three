@@ -5,7 +5,9 @@
         <div class="box">
           <email-input-with-label :label-text="'email'" :value.sync="email" />
           <password-input-with-label :label-text="'password'" :value.sync="password" />
-          <blue-outlined-button :button-text="'Login'" @click.native="login" />
+          <div class="field">
+            <info-button-outlined :button-text="'Login'" @click.native="login" />
+          </div>
         </div>
       </div>
     </div>
@@ -18,7 +20,7 @@ import { Vue, Component } from 'vue-property-decorator'
 // components
 import EmailInputWithLabel from '~/components/atoms/EmailInputWithLabel.vue'
 import PasswordInputWithLabel from '~/components/atoms/PasswordInputWithLabel.vue'
-import BlueOutlinedButton from '~/components/atoms/BlueOutlinedButton.vue'
+import InfoButtonOutlined from '~/components/atoms/InfoButtonOutlined.vue'
 
 // store
 import { authStore } from '~/store'
@@ -27,7 +29,7 @@ import { authStore } from '~/store'
   components: {
     EmailInputWithLabel,
     PasswordInputWithLabel,
-    BlueOutlinedButton
+    InfoButtonOutlined
   }
 })
 export default class Login extends Vue {
