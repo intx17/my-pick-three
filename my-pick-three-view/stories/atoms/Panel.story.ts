@@ -1,29 +1,28 @@
 import { storiesOf } from '@storybook/vue'
 import { withInfo } from 'storybook-addon-vue-info'
-import { withKnobs, object } from '@storybook/addon-knobs'
+import { withKnobs, object, array, text } from '@storybook/addon-knobs'
 import Panel from '~/components/atoms/Panel.vue'
-import { IPanel } from '~/src/components/atoms/panel'
+import { IPanelItem } from '~/src/components/atoms/panel'
 
-const panelData: IPanel = {
-  categories: [
-    'cat1',
-    'cat2'
-  ],
-  tasks: [
-    {
-      taskName: 'One'
-    },
-    {
-      taskName: 'Two'
-    },
-    {
-      taskName: 'Three'
-    },
-    {
-      taskName: 'Four'
-    }
-  ]
-}
+const panelCategories: string[] = [
+  'cat1',
+  'cat2'
+]
+
+const panelTasks: IPanelItem[] = [
+  {
+    name: 'One'
+  },
+  {
+    name: 'Two'
+  },
+  {
+    name: 'Three'
+  },
+  {
+    name: 'Four'
+  }
+]
 
 storiesOf('atoms', module)
   .addDecorator(withKnobs)
@@ -33,11 +32,19 @@ storiesOf('atoms', module)
     () => {
       return {
         components: { Panel },
-        template: '<Panel :panelData="panelData" />',
+        template: '<Panel :title="title" :categories="categories" :tasks="tasks" />',
         props: {
-          panelData: {
-            type: Object,
-            default: object('data', panelData)
+          title: {
+            type: String,
+            default: text('title', 'title')
+          },
+          categories: {
+            type: Array,
+            default: array('categories', panelCategories)
+          },
+          tasks: {
+            type: Array,
+            default: object('tasks', panelTasks)
           }
         }
       }

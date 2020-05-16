@@ -1,8 +1,3 @@
-export interface IPanel {
-  categories: string[],
-  tasks: IPanelTask[]
-}
-
-interface IPanelTask {
-  taskName: string
+export interface IPanelItem {
+  name: string
 }

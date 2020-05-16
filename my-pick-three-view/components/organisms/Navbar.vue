@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+  <nav class="navbar is-fixed-bottom is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
         my-pick-three
@@ -24,15 +24,22 @@
       class="navbar-menu"
     >
       <div class="navbar-start">
-        <a class="navbar-item">Home</a>
+        <a class="navbar-item" href="/">
+          Today
+        </a>
+        <a class="navbar-item" href="/">
+          History
+        </a>
       </div>
       <div class="navbar-end">
         <div class="navbar-item">
-          <div
-            @click="logout"
-            class="buttons"
-          >
-            <a class="button is-danger">Log out</a>
+          <div class="buttons">
+            <a
+              @click="logout"
+              class="button is-danger"
+            >
+              Log out
+            </a>
           </div>
         </div>
       </div>

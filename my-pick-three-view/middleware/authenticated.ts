@@ -5,7 +5,6 @@ const authenticated: Middleware = (context) => {
   if (context.store.getters['auth/isLoggedIn']) {
     return
   }
-  console.log(context.store.getters['auth/isLoggedIn'])
 
   auth.onAuthStateChanged((user: firebase.User | null) => {
     if (!user) {

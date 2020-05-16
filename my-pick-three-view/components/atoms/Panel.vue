@@ -1,10 +1,10 @@
 <template>
   <article class="panel is-info">
-    <p class="panel-heading">Info</p>
+    <p class="panel-heading">{{ title }}</p>
     <p class="panel-tabs">
       <a class="is-active">All</a>
-      <a v-for="(task, index) in tasks" :key="index">
-        {{ task.taskName }}
+      <a v-for="(category, index) in categories" :key="index">
+        {{ category }}
       </a>
     </p>
     <div class="panel-block">
@@ -16,14 +16,14 @@
       </p>
     </div>
     <a
-      v-for="(category, index) in categories"
+      v-for="(item, index) in items"
       :key="index"
       class="panel-block"
     >
       <span class="panel-icon">
         <i class="fas fa-book" aria-hidden="true" />
       </span>
-      {{ category }}
+      {{ item.name }}
     </a>
   </article>
 </template>
@@ -32,20 +32,17 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 // components interface
-import { IPanel } from '~/src/components/atoms/panel'
+import { IPanelItem } from '~/src/components/atoms/panel'
 
 @Component({})
 export default class Panel extends Vue {
-  @Prop({ type: Object, required: true })
-  private panelData!: IPanel
+  @Prop({ type: String, required: true })
+  private title!: string
 
-  // computed
-  get categories () {
-    return this.panelData.categories
-  }
+  @Prop({ type: Array, required: true })
+  private categories!: string[]
 
-  get tasks () {
-    return this.panelData.tasks
-  }
+  @Prop({ type: Array, required: true })
+  private items!: IPanelItem[]
 }
 </script>
