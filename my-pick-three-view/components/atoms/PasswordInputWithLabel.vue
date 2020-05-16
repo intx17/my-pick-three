@@ -9,7 +9,7 @@
         required
       >
       <span class="icon is-small is-left">
-        <i class="fa fa-key" />
+        <fa icon="key" />
       </span>
     </div>
   </div>

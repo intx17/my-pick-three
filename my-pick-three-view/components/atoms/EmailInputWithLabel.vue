@@ -10,7 +10,7 @@
         required
       >
       <span class="icon is-small is-left">
-        <i class="fa fa-envelope" />
+        <fa icon="envelope" />
       </span>
     </div>
   </div>
