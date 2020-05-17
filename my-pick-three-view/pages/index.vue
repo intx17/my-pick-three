@@ -5,19 +5,12 @@
       @open-select-modal="openSelectModal"
       @open-edit-modal="openEditModal"
     />
-    <modal-wrapper :is-active.sync="isSelectModalOpen">
-      <panel
-        :title="'タスク候補'"
-        :categories="panelCategories"
-        :items="panelItems"
-        class="has-background-white"
-      />
-    </modal-wrapper>
-    <modal-wrapper :is-active.sync="isEditModalOpen">
-      <edit-task-form
-        @save="save"
-      />
-    </modal-wrapper>
+    <select-task-modal
+      :is-select-modal-open.sync="isSelectModalOpen"
+    />
+    <edit-task-modal
+      :is-edit-modal-open.sync="isEditModalOpen"
+    />
   </div>
 </template>
 
@@ -28,12 +21,11 @@ import { Vue, Component } from 'vue-property-decorator'
 import TaskCards from '~/components/molecules/TaskCards.vue'
 import TaskButtons from '~/components/molecules/TaskButtons.vue'
 import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
-import Panel from '~/components/atoms/Panel.vue'
-import EditTaskForm from '~/components/organisms/EditTaskForm.vue'
+import SelectTaskModal from '~/components/organisms/selectTaskModal.vue'
+import EditTaskModal from '~/components/organisms/EditTaskModal.vue'
 
 // components interface
 import { ITaskCard } from '~/src/components/molecules/task-cards'
-import { IPanelItem } from '~/src/components/atoms/panel'
 
 // middlewares
 import authenticated from '~/middleware/authenticated'
@@ -50,8 +42,8 @@ import authenticated from '~/middleware/authenticated'
     TaskCards,
     TaskButtons,
     ModalWrapper,
-    Panel,
-    EditTaskForm
+    SelectTaskModal,
+    EditTaskModal
   }
 })
 export default class Index extends Vue {
@@ -77,26 +69,6 @@ export default class Index extends Vue {
     }
   ]
 
-  private panelCategories: string[] = [
-    'cat1',
-    'cat2'
-  ]
-
-  private panelItems: IPanelItem[] = [
-    {
-      name: 'One'
-    },
-    {
-      name: 'Two'
-    },
-    {
-      name: 'Three'
-    },
-    {
-      name: 'Four'
-    }
-  ]
-
   // methods
   private openSelectModal () {
     this.isSelectModalOpen = true
@@ -106,8 +78,10 @@ export default class Index extends Vue {
     this.isEditModalOpen = true
   }
 
-  private save () {
-    this.isEditModalOpen = false
+  private save (result: boolean) {
+    if (result) {
+      this.isEditModalOpen = false
+    }
   }
 }
 </script>

@@ -2,7 +2,7 @@
 import { ISelectOption } from '~/src/components/atoms/select-dropdown'
 
 enum TaskCategory {
-  Eating = 0
+  Eating = 1
 }
 
 class TaskCategoryUtil {

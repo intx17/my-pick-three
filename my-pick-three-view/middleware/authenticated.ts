@@ -12,10 +12,7 @@ const authenticated: Middleware = (context) => {
       return
     }
 
-    context.store.dispatch({
-      type: 'auth/updateUserByEmail',
-      email: user?.email
-    })
+    context.store.dispatch('auth/updateUserByEmail', user?.email)
   })
 }
 

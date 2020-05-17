@@ -21,7 +21,7 @@ declare module 'vue/types/vue' {
   interface Vue {
     $firebase: any,
     $auth: firebase.auth.Auth,
-    $db: firebase.database.Database,
+    $db: firebase.firestore.Firestore,
     // $storage: any,
     $currentUser: firebase.User | null
   }
@@ -31,7 +31,7 @@ declare module '@nuxt/types' {
   interface NuxtAppOptions {
     $firebase:any,
     $auth: firebase.auth.Auth,
-    $db: firebase.database.Database,
+    $db: firebase.firestore.Firestore,
     // $storage: any,
     $currentUser: firebase.User | null
   }
@@ -41,7 +41,7 @@ declare module 'vuex/types/index' {
   interface Store<S> {
     $firebase:any,
     $auth: firebase.auth.Auth,
-    $db: firebase.database.Database,
+    $db: firebase.firestore.Firestore,
     // $storage: any,
     $currentUser: firebase.User | null
 }}

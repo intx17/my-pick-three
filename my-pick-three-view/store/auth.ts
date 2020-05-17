@@ -1,9 +1,9 @@
 import { Mutation, Action, VuexModule, Module } from 'vuex-module-decorators'
-import User from '~/src/entities/user'
+import IUser from '~/src/entities/user'
 
 // state's interface
 export interface IAuthStore {
-  user: User | null
+  user: IUser | null
   token: string
 }
 
@@ -14,7 +14,7 @@ export interface IAuthStore {
 })
 export default class AuthStore extends VuexModule implements IAuthStore {
   // state
-  user: User | null = null
+  user: IUser | null = null
   token: string = window.localStorage.getItem('token') || ''
 
   // gettes
@@ -24,7 +24,7 @@ export default class AuthStore extends VuexModule implements IAuthStore {
 
   // mutation
   @Mutation
-  public setUser (user: User | null) {
+  public setUser (user: IUser | null) {
     this.user = user
   }
 
@@ -36,7 +36,7 @@ export default class AuthStore extends VuexModule implements IAuthStore {
       return
     }
 
-    const user: User = {
+    const user: IUser = {
       email
     }
     this.setUser(user)

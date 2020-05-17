@@ -13,7 +13,7 @@ storiesOf('organisms', module)
     () => {
       return {
         components: { ModalWrapper },
-        template: '<ModalWrapper :is-active.sync="isActive"><p style="width: 200px; height: 200px; background-color: white;">modal content</p></ModalWrapper>',
+        template: `<ModalWrapper :is-active.sync="isActive">${modalContent}</ModalWrapper>`,
         props: {
           isActive: {
             type: Boolean,
