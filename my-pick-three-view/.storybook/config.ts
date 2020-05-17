@@ -1,4 +1,5 @@
 import Vue from 'vue'
+
 import 'bulma/css/bulma.css'
 
 import { configure, addDecorator } from '@storybook/vue'
@@ -19,6 +20,22 @@ const loadStories = () => {
 }
 
 configure(loadStories, module)
+
+// 汎用モックstore
+const storeOption = {
+  modules: {
+    'select-task-modal' : {
+      namespaced: true,
+      state: {
+        _panelCategories: []
+      },
+      getters: {
+        // モックデータを返す
+        panelCategories: () => []
+      }
+    }
+  }
+}
 
 addDecorator(withInfo)
 addDecorator(withKnobs)

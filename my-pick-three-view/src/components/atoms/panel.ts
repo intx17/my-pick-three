@@ -1,3 +1,7 @@
+import { TaskCategory } from '~/src/enums/task-category'
+
 export interface IPanelItem {
-  name: string
+  category: TaskCategory,
+  itemId: string
+  itemName: string
 }

@@ -25,10 +25,17 @@ import SelectTaskModal from '~/components/organisms/selectTaskModal.vue'
 import EditTaskModal from '~/components/organisms/EditTaskModal.vue'
 
 // components interface
+import { IPanelItem } from '~/src/components/atoms/panel'
 import { ITaskCard } from '~/src/components/molecules/task-cards'
 
 // middlewares
 import authenticated from '~/middleware/authenticated'
+
+// entities
+import ICategory from '~/src/entities/category'
+
+// store
+import { authStore, selectTaskModalStore } from '~/store'
 
 @Component({
   layout: 'default',
@@ -69,9 +76,42 @@ export default class Index extends Vue {
     }
   ]
 
+  private panelCategories: ICategory[] = []
+  private panelItems: IPanelItem[] = []
+
   // methods
-  private openSelectModal () {
-    this.isSelectModalOpen = true
+  private async openSelectModal () {
+    try {
+      const email = authStore.user!.email
+      const panelCategories: ICategory[] = []
+      const panelItems: IPanelItem[] = []
+      const categories = await this.$db.collection('categories').get()
+      categories.forEach((category: any) => {
+        const c: ICategory = {
+          categoryId: category.data().categoryId,
+          categoryName: category.data().categoryName
+        }
+        panelCategories.push(c)
+      })
+      selectTaskModalStore.updatePanelCategories(JSON.parse(JSON.stringify(panelCategories)))
+
+      const userTasks = await this.$db.collection('tasks')
+        .where('user.email', '==', email).get()
+      userTasks.forEach((task: any) => {
+        const pi: IPanelItem = {
+          category: Number(task.data().categoryId),
+          itemId: task.id,
+          itemName: task.data().taskName
+        }
+        panelItems.push(pi)
+        console.log(pi)
+      })
+      selectTaskModalStore.updatePanelItems(JSON.parse(JSON.stringify(panelItems)))
+
+      this.isSelectModalOpen = true
+    } catch (err) {
+      alert(err.message)
+    }
   }
 
   private openEditModal () {

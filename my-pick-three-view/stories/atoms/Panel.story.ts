@@ -1,26 +1,44 @@
 import { storiesOf } from '@storybook/vue'
 import { withInfo } from 'storybook-addon-vue-info'
-import { withKnobs, object, array, text } from '@storybook/addon-knobs'
+import { withKnobs, object, text } from '@storybook/addon-knobs'
 import Panel from '~/components/atoms/Panel.vue'
 import { IPanelItem } from '~/src/components/atoms/panel'
 
-const panelCategories: string[] = [
-  'cat1',
-  'cat2'
+// entities
+import ICategory from '~/src/entities/category'
+import { TaskCategory } from '~/src/enums/task-category'
+
+const panelCategories: ICategory[] = [
+  {
+    categoryId: 1,
+    categoryName: 'cat1'
+  },
+  {
+    categoryId: 2,
+    categoryName: 'cat2'
+  }
 ]
 
 const panelTasks: IPanelItem[] = [
   {
-    name: 'One'
+    category: TaskCategory.Eating,
+    itemId: 'id1',
+    itemName: 'One'
   },
   {
-    name: 'Two'
+    category: TaskCategory.Eating,
+    itemId: 'id2',
+    itemName: 'Two'
   },
   {
-    name: 'Three'
+    category: TaskCategory.Eating,
+    itemId: 'id3',
+    itemName: 'Three'
   },
   {
-    name: 'Four'
+    category: TaskCategory.Eating,
+    itemId: 'id4',
+    itemName: 'Four'
   }
 ]
 
@@ -32,7 +50,7 @@ storiesOf('atoms', module)
     () => {
       return {
         components: { Panel },
-        template: '<Panel :title="title" :categories="categories" :tasks="tasks" />',
+        template: '<Panel :title="title" :categories="categories" :items="items" />',
         props: {
           title: {
             type: String,
@@ -40,11 +58,11 @@ storiesOf('atoms', module)
           },
           categories: {
             type: Array,
-            default: array('categories', panelCategories)
+            default: object('categories', panelCategories)
           },
-          tasks: {
+          items: {
             type: Array,
-            default: object('tasks', panelTasks)
+            default: object('imtess', panelTasks)
           }
         }
       }

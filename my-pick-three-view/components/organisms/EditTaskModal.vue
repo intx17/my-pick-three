@@ -4,15 +4,12 @@
       <div class="column is-11">
         <div class="box">
           <text-input-with-label :label-text="'タスク名'" :value.sync="taskName" />
-          <div class="field">
-            <label class="label">カテゴリ</label>
-            <div class="control">
-              <select-dropdown
-                :selected-value.sync="selectedCategory"
-                :options="selectOptions"
-              />
-            </div>
-          </div>
+          <select-dropdown-with-label
+            :selected-value.sync="selectedCategory"
+            :options="selectOptions"
+            :label-text="'カテゴリ'"
+          />
+          <textarea-with-label :label-text="'タスク詳細'" :text.sync="taskDetail" />
           <div class="field">
             <info-button-outlined :button-text="'Save'" @click.native="save()" />
           </div>
@@ -27,7 +24,8 @@ import { Vue, Component, Emit, PropSync } from 'vue-property-decorator'
 
 // components
 import TextInputWithLabel from '~/components/atoms/TextInputWithLabel.vue'
-import SelectDropdown from '~/components/atoms/SelectDropdown.vue'
+import SelectDropdownWithLabel from '~/components/atoms/SelectDropdownWithLabel.vue'
+import TextareaWithLabel from '~/components/atoms/TextareaWithLabel.vue'
 import InfoButtonOutlined from '~/components/atoms/InfoButtonOutlined.vue'
 import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
 
@@ -46,7 +44,8 @@ import { authStore } from '~/store'
 @Component({
   components: {
     TextInputWithLabel,
-    SelectDropdown,
+    SelectDropdownWithLabel,
+    TextareaWithLabel,
     InfoButtonOutlined,
     ModalWrapper
   }
@@ -56,6 +55,7 @@ export default class EditTaskModal extends Vue {
   private syncedIsEditModalOpen!: boolean
 
   private taskName: string = ''
+  private taskDetail: string = ''
   private selectedCategory: String = String(TaskCategory.Eating)
   private selectOptions: ISelectOption[] = TaskCategoryUtil.getSelectOptions()
 
@@ -69,6 +69,7 @@ export default class EditTaskModal extends Vue {
 
     const task: ITask = {
       user,
+      taskDetail: this.taskDetail,
       taskName: this.taskName,
       categoryId: Number(this.selectedCategory)
     }

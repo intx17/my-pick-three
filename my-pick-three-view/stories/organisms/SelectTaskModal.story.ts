@@ -2,6 +2,43 @@ import { storiesOf } from '@storybook/vue'
 import { withInfo } from 'storybook-addon-vue-info'
 import { withKnobs, boolean } from '@storybook/addon-knobs'
 import SelectTaskModal from '~/components/organisms/SelectTaskModal.vue'
+import { IPanelItem } from '~/src/components/atoms/panel'
+import { TaskCategory } from '~/src/enums/task-category'
+import ICategory from '~/src/entities/category'
+
+const panelCategories: ICategory[] = [
+  {
+    categoryId: 1,
+    categoryName: 'cat1'
+  },
+  {
+    categoryId: 2,
+    categoryName: 'cat2'
+  }
+]
+
+const panelItems: IPanelItem[] = [
+  {
+    category: TaskCategory.Eating,
+    itemId: 'id1',
+    itemName: 'One'
+  },
+  {
+    category: TaskCategory.Eating,
+    itemId: 'id2',
+    itemName: 'Two'
+  },
+  {
+    category: TaskCategory.Eating,
+    itemId: 'id3',
+    itemName: 'Three'
+  },
+  {
+    category: TaskCategory.Eating,
+    itemId: 'id4',
+    itemName: 'Four'
+  }
+]
 
 storiesOf('organisms', module)
   .addDecorator(withKnobs)
@@ -10,7 +47,19 @@ storiesOf('organisms', module)
     'SelectTaskModal',
     () => {
       return {
-        components: { SelectTaskModal },
+        components: {
+          SelectTaskModal: {
+            extends: SelectTaskModal,
+            computed: {
+              panelCategories () {
+                return panelCategories
+              },
+              panelItems () {
+                return panelItems
+              }
+            }
+          }
+        },
         template: '<SelectTaskModal :is-select-modal-open.sync="isSelectModalOpen" />',
         props: {
           isSelectModalOpen: {

@@ -28,6 +28,7 @@
     "@types/storybook__addon-info": "^5.2.1",
     "@types/storybook__addon-knobs": "^5.2.1",
     "cross-env": "^5.2.0",
+    "moment": "^2.25.3",
     "nuxt": "^2.4.0",
     "nuxt-fontawesome": "^0.4.0",
     "vue-js-modal": "^2.0.0-rc.3",

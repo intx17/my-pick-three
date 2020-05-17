@@ -2,13 +2,17 @@
 import { ISelectOption } from '~/src/components/atoms/select-dropdown'
 
 enum TaskCategory {
-  Eating = 1
+  All = 0,
+  Eating = 1,
+  Exercise = 2
 }
 
 class TaskCategoryUtil {
   private static textMap = new Map<TaskCategory, string>(
     [
-      [TaskCategory.Eating, '食事']
+      [TaskCategory.All, '全て'],
+      [TaskCategory.Eating, '食事'],
+      [TaskCategory.Exercise, '運動']
     ]
   )
 

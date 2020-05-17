@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/vue'
 import { withInfo } from 'storybook-addon-vue-info'
 import { withKnobs, object, text } from '@storybook/addon-knobs'
-import SelectDropdown from '~/components/atoms/SelectDropdown.vue'
+import SelectDropdownWithLabel from '~/components/atoms/SelectDropdownWithLabel.vue'
 import { ISelectOption } from '~/src/components/atoms/select-dropdown'
 
 const options: ISelectOption[] = [
@@ -19,11 +19,11 @@ storiesOf('atoms', module)
   .addDecorator(withKnobs)
   .addDecorator(withInfo({ inline: true }))
   .add(
-    'SelectDropdown',
+    'SelectDropdownWithLabel',
     () => {
       return {
-        components: { SelectDropdown },
-        template: '<SelectDropdown :selected-value.sync="selectedValue" :options="options" />',
+        components: { SelectDropdownWithLabel },
+        template: '<SelectDropdownWithLabel :selected-value.sync="selectedValue" :options="options" :label-text="labelText" />',
         props: {
           selectedValue: {
             type: String,
@@ -32,7 +32,12 @@ storiesOf('atoms', module)
           options: {
             type: Array,
             default: object('options', options)
+          },
+          labelText: {
+            type: String,
+            default: text('labelText', 'text')
           }
+
         }
       }
     })
