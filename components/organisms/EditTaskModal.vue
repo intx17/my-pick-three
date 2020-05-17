@@ -65,7 +65,7 @@ export default class EditTaskModal extends Vue {
       .map((category: ICategory) => {
         const option: ISelectOption = {
           text: category.categoryName,
-          value: String(category.categoryName)
+          value: String(category.categoryId)
         }
         return option
       })
