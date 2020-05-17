@@ -6,7 +6,7 @@
         v-for="(category, index) in categoriesWithAll"
         :key="index"
         @click="selectCategory(category.categoryId)"
-        :class="{ 'is-active': selectedCategory === Number(category.categoryId) }"
+        :class="{ 'is-active': selectedCategoryId === Number(category.categoryId) }"
       >
         {{ category.categoryName }}
       </a>
@@ -41,7 +41,6 @@ import { IPanelItem } from '~/src/components/atoms/panel'
 
 // entities
 import ICategory from '~/src/entities/category'
-import { TaskCategory } from '~/src/enums/task-category'
 
 @Component({})
 export default class Panel extends Vue {
@@ -54,15 +53,15 @@ export default class Panel extends Vue {
   @Prop({ type: Array, required: true })
   private items!: IPanelItem[]
 
-  private selectedCategory: TaskCategory = TaskCategory.All
+  private selectedCategoryId: number = 0
 
   get filteredItems () {
-    if (this.selectedCategory === TaskCategory.All) {
+    if (this.selectedCategoryId === 0) {
       return this.items
     }
 
     return this.items
-      .filter(item => item.category === this.selectedCategory)
+      .filter(item => item.categoryId === this.selectedCategoryId)
   }
 
   get categoriesWithAll () {
@@ -80,8 +79,7 @@ export default class Panel extends Vue {
 
   // methods
   private selectCategory (categoryId: number) {
-    const category = Number(categoryId)
-    this.selectedCategory = category
+    this.selectedCategoryId = categoryId
   }
 
   // 親コンポーネントでDBへの処理を行う

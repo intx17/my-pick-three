@@ -132,7 +132,7 @@ export default class Index extends Vue {
       const panelItems: IPanelItem[] = userTaskInfoStore.tasks
         .map((task: ITask) => {
           const item: IPanelItem = {
-            category: Number(task.categoryId),
+            categoryId: Number(task.categoryId),
             itemId: task.taskId!,
             itemName: task.taskName
           }

@@ -3,7 +3,6 @@ import { withInfo } from 'storybook-addon-vue-info'
 import { withKnobs, boolean } from '@storybook/addon-knobs'
 import SelectTaskModal from '~/components/organisms/SelectTaskModal.vue'
 import { IPanelItem } from '~/src/components/atoms/panel'
-import { TaskCategory } from '~/src/enums/task-category'
 import ICategory from '~/src/entities/category'
 
 const panelCategories: ICategory[] = [
@@ -19,22 +18,22 @@ const panelCategories: ICategory[] = [
 
 const panelItems: IPanelItem[] = [
   {
-    category: TaskCategory.Eating,
+    categoryId: 1,
     itemId: 'id1',
     itemName: 'One'
   },
   {
-    category: TaskCategory.Eating,
+    categoryId: 2,
     itemId: 'id2',
     itemName: 'Two'
   },
   {
-    category: TaskCategory.Eating,
+    categoryId: 3,
     itemId: 'id3',
     itemName: 'Three'
   },
   {
-    category: TaskCategory.Eating,
+    categoryId: 4,
     itemId: 'id4',
     itemName: 'Four'
   }

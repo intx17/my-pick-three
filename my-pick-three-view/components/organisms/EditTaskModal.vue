@@ -32,11 +32,9 @@ import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
 // components interface
 import { ISelectOption } from '~/src/components/atoms/select-dropdown'
 
-// enums
-import { TaskCategoryUtil, TaskCategory } from '~/src/enums/task-category'
-
 // entities
 import ITask from '~/src/entities/task'
+import ICategory from '~/src/entities/category'
 
 // store
 import { authStore, userTaskInfoStore } from '~/store'
@@ -56,8 +54,22 @@ export default class EditTaskModal extends Vue {
 
   private taskName: string = ''
   private taskDetail: string = ''
-  private selectedCategory: String = String(TaskCategory.Eating)
-  private selectOptions: ISelectOption[] = TaskCategoryUtil.getSelectOptions()
+  private selectedCategory: string = ''
+
+  // computed
+  get selectOptions (): ISelectOption[] {
+    return userTaskInfoStore.categories.slice()
+      .sort((catA, catB) => {
+        return catA.categoryId - catB.categoryId
+      })
+      .map((category: ICategory) => {
+        const option: ISelectOption = {
+          text: category.categoryName,
+          value: String(category.categoryName)
+        }
+        return option
+      })
+  }
 
   private save () {
     const user = authStore.user

@@ -8,20 +8,20 @@ import TaskCards from '~/components/molecules/TaskCards.vue'
 // component interfaces
 import { ITaskCard } from '~/src/components/molecules/task-cards'
 
-const tasks: ITaskCard[] = [
+const taskCards: ITaskCard[] = [
   {
-    taskTitle: 'Title1',
-    taskDetail: 'Detail1'.repeat(10),
+    title: 'Title1',
+    detail: 'Detail1'.repeat(10),
     done: true
   },
   {
-    taskTitle: 'Title2',
-    taskDetail: 'Detail2'.repeat(10),
+    title: 'Title2',
+    detail: 'Detail2'.repeat(10),
     done: false
   },
   {
-    taskTitle: 'Title3',
-    taskDetail: 'Detail3'.repeat(10),
+    title: 'Title3',
+    detail: 'Detail3'.repeat(10),
     done: false
   }
 ]
@@ -33,13 +33,16 @@ storiesOf('molecules', module)
     'TaskCards',
     () => {
       return {
-        components: { TaskCards },
-        template: '<TaskCards :tasks="tasks" />',
-        props: {
-          tasks: {
-            type: Array,
-            default: object('tasks', tasks)
+        components: {
+          TaskCards: {
+            extends: TaskCards,
+            computed: {
+              taskCards () {
+                return taskCards
+              }
+            }
           }
-        }
+        },
+        template: '<TaskCards />'
       }
     })

@@ -6,7 +6,6 @@ import { IPanelItem } from '~/src/components/atoms/panel'
 
 // entities
 import ICategory from '~/src/entities/category'
-import { TaskCategory } from '~/src/enums/task-category'
 
 const panelCategories: ICategory[] = [
   {
@@ -21,22 +20,22 @@ const panelCategories: ICategory[] = [
 
 const panelTasks: IPanelItem[] = [
   {
-    category: TaskCategory.Eating,
+    categoryId: 1,
     itemId: 'id1',
     itemName: 'One'
   },
   {
-    category: TaskCategory.Eating,
+    categoryId: 2,
     itemId: 'id2',
     itemName: 'Two'
   },
   {
-    category: TaskCategory.Eating,
+    categoryId: 3,
     itemId: 'id3',
     itemName: 'Three'
   },
   {
-    category: TaskCategory.Eating,
+    categoryId: 4,
     itemId: 'id4',
     itemName: 'Four'
   }
