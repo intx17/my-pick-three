@@ -80,7 +80,6 @@ export default class NavBar extends Vue {
       await this.$auth.signOut()
       authStore.updateUserByEmail(null)
       window.localStorage.setItem('token', '')
-      this.$router.push('/login')
     } catch (err) {
       window.alert(err.message)
     }

@@ -59,8 +59,7 @@ export default class EditTaskModal extends Vue {
   private selectedCategory: String = String(TaskCategory.Eating)
   private selectOptions: ISelectOption[] = TaskCategoryUtil.getSelectOptions()
 
-  @Emit()
-  private save (): boolean {
+  private save () {
     const user = authStore.user
 
     if (!user || !user.email) {
@@ -79,10 +78,9 @@ export default class EditTaskModal extends Vue {
       const newTasks = [...userTaskInfoStore.tasks, task]
       userTaskInfoStore.updateTasks(newTasks)
       alert('タスク保存に成功しました。')
-      return true
+      this.syncedIsEditModalOpen = false
     } catch (err) {
       alert(err.message)
-      return false
     }
   }
 }
