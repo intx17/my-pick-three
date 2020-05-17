@@ -1,6 +1,7 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
 require('dotenv').config()
 
+// For Netlify Deploy
 const env = {
   API_KEY: process.env.API_KEY,
   AUTH_DOMAIN: process.env.AUTH_DOMAIN,
@@ -13,6 +14,7 @@ const env = {
 }
 
 export default {
+  // For Netlify Deploy
   env,
   mode: 'spa',
   server: {
