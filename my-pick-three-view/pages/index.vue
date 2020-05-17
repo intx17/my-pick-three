@@ -22,7 +22,7 @@ import ITaskHistory from '../src/entities/task-history'
 import TaskCards from '~/components/molecules/TaskCards.vue'
 import TaskButtons from '~/components/molecules/TaskButtons.vue'
 import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
-import SelectTaskModal from '~/components/organisms/selectTaskModal.vue'
+import SelectTaskModal from '~/components/organisms/SelectTaskModal.vue'
 import EditTaskModal from '~/components/organisms/EditTaskModal.vue'
 
 // components interface
@@ -100,6 +100,7 @@ export default class Index extends Vue {
       historiesDocs.forEach((doc: any) => {
         const history: ITaskHistory = {
           taskId: doc.data().taskId,
+          historyId: doc.id,
           date: doc.data().date,
           done: doc.data().done
         }

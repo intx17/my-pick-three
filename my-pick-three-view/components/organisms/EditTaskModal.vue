@@ -89,9 +89,9 @@ export default class EditTaskModal extends Vue {
       this.validateTaskBeforeSave(task)
 
       this.$db.collection('tasks').add(task)
-      const newTasks = [...userTaskInfoStore.tasks, task]
+      const newTasks: ITask[] = JSON.parse(JSON.stringify(userTaskInfoStore.tasks))
+      newTasks.push(task)
       userTaskInfoStore.updateTasks(newTasks)
-      alert('タスク保存に成功しました。')
 
       this.syncedIsEditModalOpen = false
     } catch (err) {

@@ -1,7 +1,9 @@
 <template>
   <div class="card">
     <header class="card-header">
-      <p class="card-header-title has-background-light">{{ title }}</p>
+      <p class="card-header-title has-background-light">
+        <span :class="{ 'done-title': done }">{{ title }}</span>
+      </p>
       <a href="#" class="card-header-icon" aria-label="more options">
         <span v-if="isContentShown" @click="hideContent" class="icon">
           <fa icon="angle-down" area-hidden="true" />
@@ -18,20 +20,33 @@
     </div>
     <footer class="card-footer">
       <a
-        href="#"
+        :class="{ 'disabled': done }"
+        @click="clickDone"
         class="card-footer-item has-background-primary has-text-white"
-      >Done</a>
-      <a href="#" class="card-footer-item has-background-danger has-text-white">Remove</a>
+      >
+        <fa v-show="done" icon="check" />
+        Done
+      </a>
+      <a
+        @click="clickRemove"
+        class="card-footer-item has-background-danger has-text-white"
+      >Remove</a>
     </footer>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
+
+// components interface
+import { IClickDoneEmitData } from '~/src/components/atoms/card'
 
 @Component({})
 export default class Card extends Vue {
   private isContentShown: boolean = true
+
+  @Prop({ type: String, required: true })
+  private cardId!: string
 
   @Prop({ type: String, required: true })
   private title!: string
@@ -61,11 +76,32 @@ export default class Card extends Vue {
   private hideContent () {
     this.isContentShown = false
   }
+
+  @Emit()
+  private clickDone (): IClickDoneEmitData {
+    return {
+      cardId: this.cardId,
+      done: this.done
+    }
+  }
+
+  @Emit()
+  private clickRemove (): string {
+    return this.cardId
+  }
 }
 </script>
 
 <style scoped>
 div.content {
   word-wrap: break-word;
+}
+
+span.done-title {
+  text-decoration: line-through;
+}
+
+a.disabled {
+  background: gray !important;
 }
 </style>

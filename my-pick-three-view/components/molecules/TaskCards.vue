@@ -6,9 +6,12 @@
       class="column is-11"
     >
       <card
+        :cardId="card.cardId"
         :title="card.title"
         :detail="card.detail || ''"
         :done="card.done"
+        @click-done="clickDone"
+        @click-remove="clickRemove"
       />
     </div>
   </div>
@@ -24,6 +27,7 @@ import Card from '@/components/atoms/Card.vue'
 // components interface
 import { ITaskCard } from '~/src/components/molecules/task-cards'
 import ITaskHistory from '~/src/entities/task-history'
+import { IClickDoneEmitData } from '~/src/components/atoms/card'
 
 // store
 import { userTaskInfoStore } from '~/store'
@@ -36,10 +40,11 @@ import { userTaskInfoStore } from '~/store'
 export default class TaskCards extends Vue {
   // computed
   get taskCards (): ITaskCard[] {
-    const cards: ITaskCard[] = [...Array(3).keys()]
+    const fillTasks: ITaskCard[] = [...Array(3).keys()]
       .map((index) => {
         const num = index + 1
         const card = {
+          cardId: '',
           title: `title${num}`,
           detail: `detail${num}`,
           done: false
@@ -49,23 +54,64 @@ export default class TaskCards extends Vue {
     const tasks = userTaskInfoStore.tasks
     const date = moment().format('YYYY-MM-DD')
 
-    userTaskInfoStore.taskHistories
+    const cards = userTaskInfoStore.taskHistories
       .filter(history => history.date === date)
-      .slice(0, 3)
-      .forEach((history: ITaskHistory, index: number) => {
+      .reduce((cards: ITaskCard[], history: ITaskHistory) => {
         const task = tasks.find(t => t.taskId === history.taskId)
 
-        if (task) {
+        if (history.historyId && task) {
           const card: ITaskCard = {
+            cardId: history.historyId,
             title: task.taskName,
             detail: task.taskDetail,
             done: history.done
           }
-          cards[index] = card
+          cards.push(card)
         }
-      })
+
+        return cards
+      }, [])
+      .slice(0, 3)
 
     return cards
+      .concat(fillTasks.slice(cards.length, 3))
+  }
+
+  // methods
+  private clickDone (emitData: IClickDoneEmitData) {
+    try {
+      if (!emitData.cardId) {
+        throw new Error('IDが存在しません')
+      }
+
+      this.$db.collection('taskHistories').doc(emitData.cardId)
+        .update({ done: !emitData.done })
+
+      const newTaskHistories: ITaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))
+      const targetHistoryIndex = newTaskHistories.findIndex(history => history.historyId === emitData.cardId)
+      newTaskHistories[targetHistoryIndex].done = !emitData.done
+
+      userTaskInfoStore.updateTaskHistories(newTaskHistories)
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+
+  private clickRemove (cardId: string) {
+    try {
+      if (!cardId) {
+        throw new Error('IDが存在しません')
+      }
+
+      this.$db.collection('taskHistories').doc(cardId)
+        .delete()
+
+      const newTaskHistories: ITaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))
+
+      userTaskInfoStore.updateTaskHistories(newTaskHistories.filter(history => history.historyId !== cardId))
+    } catch (err) {
+      alert(err.message)
+    }
   }
 }
 </script>

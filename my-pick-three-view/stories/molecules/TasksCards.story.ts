@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/vue'
 import { withInfo } from 'storybook-addon-vue-info'
-import { withKnobs, object } from '@storybook/addon-knobs'
+import { withKnobs } from '@storybook/addon-knobs'
 
 // components
 import TaskCards from '~/components/molecules/TaskCards.vue'
@@ -10,16 +10,19 @@ import { ITaskCard } from '~/src/components/molecules/task-cards'
 
 const taskCards: ITaskCard[] = [
   {
+    cardId: 'CardId1',
     title: 'Title1',
     detail: 'Detail1'.repeat(10),
     done: true
   },
   {
+    cardId: 'CardId2',
     title: 'Title2',
     detail: 'Detail2'.repeat(10),
     done: false
   },
   {
+    cardId: 'CardId3',
     title: 'Title3',
     detail: 'Detail3'.repeat(10),
     done: false

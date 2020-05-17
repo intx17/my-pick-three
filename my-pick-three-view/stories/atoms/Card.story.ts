@@ -11,8 +11,12 @@ storiesOf('atoms', module)
     () => {
       return {
         components: { Card },
-        template: '<Card :title="title" :detail="detail" :done="done" />',
+        template: '<Card :cardId="cardId" :title="title" :detail="detail" :done="done" />',
         props: {
+          cardId: {
+            type: String,
+            default: text('cardId', 'cardId')
+          },
           title: {
             type: String,
             default: text('title', 'title')
