@@ -19,7 +19,7 @@ export default class AuthStore extends VuexModule implements IAuthStore {
 
   // gettes
   get isLoggedIn (): boolean {
-    return this.user !== null && !!this.token
+    return this.user !== null
   }
 
   // mutation

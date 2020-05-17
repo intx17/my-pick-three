@@ -6,8 +6,8 @@
       class="column is-11"
     >
       <card
-        :title="task.taskTitle"
-        :detail="task.taskDetail"
+        :title="task.taskName"
+        :detail="task.taskDetail || ''"
         :done="task.done"
       />
     </div>
@@ -15,13 +15,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 // components
 import Card from '@/components/atoms/Card.vue'
 
 // components interface
-import { ITaskCard } from '~/src/components/molecules/task-cards'
+import ITask from '~/src/entities/task'
+import { userTaskInfoStore } from '~/store'
 
 @Component({
   components: {
@@ -29,7 +30,12 @@ import { ITaskCard } from '~/src/components/molecules/task-cards'
   }
 })
 export default class TaskCards extends Vue {
-  @Prop({ type: Array, required: true })
-  private tasks!: ITaskCard[]
+  // computed
+  get tasks (): ITask[] {
+    const historiesTaskId = userTaskInfoStore.taskHistories
+      .map(history => history.taskId)
+    return userTaskInfoStore.tasks
+      .filter(task => task.taskId && historiesTaskId.includes(task.taskId))
+  }
 }
 </script>

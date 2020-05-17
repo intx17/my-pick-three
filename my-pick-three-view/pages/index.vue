@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <task-cards :tasks="tasks"/>
+    <task-cards />
     <task-buttons
       @open-select-modal="openSelectModal"
       @open-edit-modal="openEditModal"
@@ -18,6 +18,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 
 // components
+import ITaskHistory from '../src/entities/task-history'
 import TaskCards from '~/components/molecules/TaskCards.vue'
 import TaskButtons from '~/components/molecules/TaskButtons.vue'
 import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
@@ -26,7 +27,6 @@ import EditTaskModal from '~/components/organisms/EditTaskModal.vue'
 
 // components interface
 import { IPanelItem } from '~/src/components/atoms/panel'
-import { ITaskCard } from '~/src/components/molecules/task-cards'
 
 // middlewares
 import authenticated from '~/middleware/authenticated'
@@ -35,7 +35,8 @@ import authenticated from '~/middleware/authenticated'
 import ICategory from '~/src/entities/category'
 
 // store
-import { authStore, selectTaskModalStore } from '~/store'
+import { authStore, selectTaskModalStore, userTaskInfoStore } from '~/store'
+import ITask from '~/src/entities/task'
 
 @Component({
   layout: 'default',
@@ -58,33 +59,62 @@ export default class Index extends Vue {
 
   private isEditModalOpen: boolean = false
 
-  private tasks: ITaskCard[] = [
-    {
-      taskTitle: 'Title1',
-      taskDetail: 'Detail1'.repeat(3),
-      done: true
-    },
-    {
-      taskTitle: 'Title2',
-      taskDetail: 'Detail2'.repeat(3),
-      done: false
-    },
-    {
-      taskTitle: 'Title3',
-      taskDetail: 'Detail3'.repeat(3),
-      done: false
-    }
-  ]
-
   private panelCategories: ICategory[] = []
   private panelItems: IPanelItem[] = []
 
   // methods
+  async created () {
+    try {
+      console.log(authStore.user)
+      const email = authStore.user?.email
+      if (!email) {
+        throw new Error('created: 認証情報が不正です')
+      }
+
+      const tasks: ITask[] = []
+      const taskDocs = await this.$db.collection('tasks')
+        .where('user.email', '==', email)
+        .get()
+
+      taskDocs.forEach((doc: any) => {
+        const task: ITask = {
+          categoryId: doc.data().categoryId,
+          taskId: doc.id,
+          taskName: doc.data().taskName,
+          taskDetail: doc.data().taskDetail,
+          user: doc.data().user
+        }
+        tasks.push(task)
+      })
+      userTaskInfoStore.updateTasks(JSON.parse(JSON.stringify(tasks)))
+
+      const taskIds: string[] = tasks.map(task => task.taskId!)
+      const histories: ITaskHistory[] = []
+      const historiesDocs = await this.$db.collection('taskHistories')
+        .where('taskId', 'in', taskIds)
+        .get()
+      historiesDocs.forEach((doc: any) => {
+        const history: ITaskHistory = {
+          taskId: doc.data().taskId,
+          date: doc.data().date,
+          done: doc.data().done
+        }
+        histories.push(history)
+      })
+      userTaskInfoStore.updateTaskHistories(JSON.parse(JSON.stringify(histories)))
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+
   private async openSelectModal () {
     try {
-      const email = authStore.user!.email
+      const email = authStore.user?.email
+      if (!email) {
+        throw new Error('openSelectModal: 認証情報が不正です')
+      }
+
       const panelCategories: ICategory[] = []
-      const panelItems: IPanelItem[] = []
       const categories = await this.$db.collection('categories').get()
       categories.forEach((category: any) => {
         const c: ICategory = {
@@ -95,17 +125,15 @@ export default class Index extends Vue {
       })
       selectTaskModalStore.updatePanelCategories(JSON.parse(JSON.stringify(panelCategories)))
 
-      const userTasks = await this.$db.collection('tasks')
-        .where('user.email', '==', email).get()
-      userTasks.forEach((task: any) => {
-        const pi: IPanelItem = {
-          category: Number(task.data().categoryId),
-          itemId: task.id,
-          itemName: task.data().taskName
-        }
-        panelItems.push(pi)
-        console.log(pi)
-      })
+      const panelItems: IPanelItem[] = userTaskInfoStore.tasks
+        .map((task: ITask) => {
+          const item: IPanelItem = {
+            category: Number(task.categoryId),
+            itemId: task.taskId!,
+            itemName: task.taskName
+          }
+          return item
+        })
       selectTaskModalStore.updatePanelItems(JSON.parse(JSON.stringify(panelItems)))
 
       this.isSelectModalOpen = true

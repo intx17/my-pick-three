@@ -1,19 +1,17 @@
 import { Middleware } from '@nuxt/types'
 
-const authenticated: Middleware = (context) => {
-  const auth = context.app.$auth
+const authenticated: Middleware = async (context) => {
   if (context.store.getters['auth/isLoggedIn']) {
     return
   }
 
-  auth.onAuthStateChanged((user: firebase.User | null) => {
-    if (!user) {
-      context.redirect('/login')
-      return
-    }
+  const user = context.app.$currentUser
 
-    context.store.dispatch('auth/updateUserByEmail', user?.email)
-  })
+  if (!user) {
+    context.redirect('/login')
+  }
+
+  context.store.dispatch('auth/updateUserByEmail', user?.email)
 }
 
 export default authenticated

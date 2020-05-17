@@ -16,7 +16,7 @@ import { Vue, Component, PropSync } from 'vue-property-decorator'
 import moment from 'moment'
 
 // components
-import { selectTaskModalStore } from '~/store'
+import { selectTaskModalStore, userTaskInfoStore } from '~/store'
 import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
 import Panel from '~/components/atoms/Panel.vue'
 
@@ -54,7 +54,24 @@ export default class selectTaskModal extends Vue {
       return ('タスク情報が不正です')
     }
 
+    const duplicateTaskHistory = userTaskInfoStore.taskHistories
+      .find(task => task.taskId === item.itemId)
+
+    if (duplicateTaskHistory) {
+      alert('指定のタスクはすでに追加されています')
+      return
+    }
+
     const date: string = moment().format('YYYY-MM-DD')
+    const taskHistoryCount = userTaskInfoStore.taskHistories
+      .filter(task => task.date === date)
+      .length
+
+    if (taskHistoryCount >= 3) {
+      alert('今日のタスク登録可能数を超えています')
+      return
+    }
+
     const taskHistory: ITaskHistory = {
       taskId: item.itemId,
       done: false,
@@ -62,18 +79,10 @@ export default class selectTaskModal extends Vue {
     }
 
     try {
-      const duplicateTaskHistory = await this.$db.collection('taskHistories')
-        .where('taskId', '==', taskHistory.taskId)
-        .where('date', '==', date)
-        .get()
-
-      if (duplicateTaskHistory.empty) {
-        await this.$db.collection('taskHistories').add(taskHistory)
-        alert('今日のタスクを追加しました')
-        return
-      }
-
-      alert('指定のタスクはすでに追加されています')
+      await this.$db.collection('taskHistories').add(taskHistory)
+      const newTaskHistoriy = [...userTaskInfoStore.taskHistories.slice(), taskHistory]
+      userTaskInfoStore.updateTaskHistories(newTaskHistoriy)
+      alert('今日のタスクを追加しました')
     } catch (err) {
       console.log(err.message)
     }

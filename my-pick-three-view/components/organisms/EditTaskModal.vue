@@ -39,7 +39,7 @@ import { TaskCategoryUtil, TaskCategory } from '~/src/enums/task-category'
 import ITask from '~/src/entities/task'
 
 // store
-import { authStore } from '~/store'
+import { authStore, userTaskInfoStore } from '~/store'
 
 @Component({
   components: {
@@ -76,6 +76,8 @@ export default class EditTaskModal extends Vue {
 
     try {
       this.$db.collection('tasks').add(task)
+      const newTasks = [...userTaskInfoStore.tasks, task]
+      userTaskInfoStore.updateTasks(newTasks)
       alert('タスク保存に成功しました。')
       return true
     } catch (err) {
