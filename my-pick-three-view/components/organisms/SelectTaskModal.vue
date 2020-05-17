@@ -39,7 +39,7 @@ export default class selectTaskModal extends Vue {
 
   // computed
   get panelCategories (): ICategory[] {
-    return selectTaskModalStore.panelCategories
+    return userTaskInfoStore.categories
   }
 
   get panelItems (): IPanelItem[] {

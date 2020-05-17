@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Emit, PropSync } from 'vue-property-decorator'
+import { Vue, Component, PropSync } from 'vue-property-decorator'
 
 // components
 import TextInputWithLabel from '~/components/atoms/TextInputWithLabel.vue'
@@ -74,13 +74,26 @@ export default class EditTaskModal extends Vue {
     }
 
     try {
+      this.validateTaskBeforeSave(task)
+
       this.$db.collection('tasks').add(task)
       const newTasks = [...userTaskInfoStore.tasks, task]
       userTaskInfoStore.updateTasks(newTasks)
       alert('タスク保存に成功しました。')
+
       this.syncedIsEditModalOpen = false
     } catch (err) {
       alert(err.message)
+    }
+  }
+
+  private validateTaskBeforeSave (task: ITask) {
+    if (!task.taskName) {
+      throw new Error('タスク名を入力してください')
+    }
+
+    if (!task.categoryId) {
+      throw new Error('カテゴリを入力してください')
     }
   }
 }

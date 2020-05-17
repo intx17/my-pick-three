@@ -5,7 +5,7 @@
       <textarea
         v-model="syncedText"
         class="textarea is-small"
-        placeholder="Small textarea"
+        placeholder="placeholder"
       />
     </div>
   </div>

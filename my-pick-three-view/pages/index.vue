@@ -65,7 +65,6 @@ export default class Index extends Vue {
   // methods
   async created () {
     try {
-      console.log(authStore.user)
       const email = authStore.user?.email
       if (!email) {
         throw new Error('created: 認証情報が不正です')
@@ -75,6 +74,11 @@ export default class Index extends Vue {
       const taskDocs = await this.$db.collection('tasks')
         .where('user.email', '==', email)
         .get()
+
+      // TODO: リファクタ
+      if (taskDocs.empty) {
+        return
+      }
 
       taskDocs.forEach((doc: any) => {
         const task: ITask = {
@@ -102,28 +106,28 @@ export default class Index extends Vue {
         histories.push(history)
       })
       userTaskInfoStore.updateTaskHistories(JSON.parse(JSON.stringify(histories)))
+
+      const categories: ICategory[] = []
+      const categoryDocs = await this.$db.collection('categories').get()
+      categoryDocs.forEach((doc: any) => {
+        const c: ICategory = {
+          categoryId: doc.data().categoryId,
+          categoryName: doc.data().categoryName
+        }
+        categories.push(c)
+      })
+      userTaskInfoStore.updateCategories(JSON.parse(JSON.stringify(categories)))
     } catch (err) {
       alert(err.message)
     }
   }
 
-  private async openSelectModal () {
+  private openSelectModal () {
     try {
       const email = authStore.user?.email
       if (!email) {
         throw new Error('openSelectModal: 認証情報が不正です')
       }
-
-      const panelCategories: ICategory[] = []
-      const categories = await this.$db.collection('categories').get()
-      categories.forEach((category: any) => {
-        const c: ICategory = {
-          categoryId: category.data().categoryId,
-          categoryName: category.data().categoryName
-        }
-        panelCategories.push(c)
-      })
-      selectTaskModalStore.updatePanelCategories(JSON.parse(JSON.stringify(panelCategories)))
 
       const panelItems: IPanelItem[] = userTaskInfoStore.tasks
         .map((task: ITask) => {

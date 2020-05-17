@@ -1,11 +1,13 @@
 import { Mutation, Action, VuexModule, Module } from 'vuex-module-decorators'
 import ITask from '~/src/entities/task'
 import ITaskHistory from '~/src/entities/task-history'
+import ICategory from '~/src/entities/category'
 
 // state's interface
 export interface IUserTaskInfoStore {
   tasks: ITask[]
-  taskHistories: ITaskHistory[]
+  taskHistories: ITaskHistory[],
+  categories: ICategory[]
 }
 
 @Module({
@@ -17,6 +19,7 @@ export default class UserTaskInfoStore extends VuexModule implements IUserTaskIn
   // state
   tasks: ITask[] = []
   taskHistories: ITaskHistory[] = []
+  categories: ICategory[] = []
 
   // mutation
   @Mutation
@@ -29,15 +32,24 @@ export default class UserTaskInfoStore extends VuexModule implements IUserTaskIn
     this.taskHistories = taskHistories
   }
 
-  // actions
-  @Action
-  public updateTasks (tasks: ITask[]) {
-    this.setTasks(tasks)
+   @Mutation
+  public setCategories (categories: ICategory[]) {
+    this.categories = categories
   }
 
   // actions
   @Action
+   public updateTasks (tasks: ITask[]) {
+     this.setTasks(tasks)
+   }
+
+  @Action
   public updateTaskHistories (taskHistories: ITaskHistory[]) {
     this.setTaskHistories(taskHistories)
+  }
+
+  @Action
+  public updateCategories (categories: ICategory[]) {
+    this.setCategories(categories)
   }
 }
