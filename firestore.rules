@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /tasks/{taskId} {
+      allow read, delete: if request.auth.token.email == resource.data.user.email;
+      allow write: if request.auth.token.email != null
+    }
+    match /taskHistories/{taskHistoryId} {
+      allow read, write, delete: if request.auth.token.email != null
+    }
+    match /categories/{categoryHashId} {
+      allow read, write, delete: if request.auth.token.email != null
+    }
+  }
+}
