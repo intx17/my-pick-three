@@ -45,6 +45,7 @@ export default class TaskCards extends Vue {
         const num = index + 1
         const card = {
           cardId: '',
+          categoryCode: Number.MAX_VALUE,
           title: `title${num}`,
           detail: `detail${num}`,
           done: false
@@ -56,12 +57,14 @@ export default class TaskCards extends Vue {
 
     const cards = userTaskInfoStore.taskHistories
       .filter(history => history.date === date)
+      .slice(0, 3)
       .reduce((cards: ITaskCard[], history: ITaskHistory) => {
         const task = tasks.find(t => t.taskId === history.taskId)
 
         if (history.historyId && task) {
           const card: ITaskCard = {
             cardId: history.historyId,
+            categoryCode: task.categoryCode,
             title: task.taskName,
             detail: task.taskDetail,
             done: history.done
@@ -75,6 +78,7 @@ export default class TaskCards extends Vue {
 
     return cards
       .concat(fillTasks.slice(cards.length, 3))
+      .sort((cardA, cardB) => cardA.categoryCode - cardB.categoryCode)
   }
 
   // methods

@@ -70,6 +70,7 @@ export default class Panel extends Vue {
 
     return categoryItems
       .filter(item => item.itemName.includes(this.searchWord))
+      .sort()
   }
 
   get categoriesWithAll () {
