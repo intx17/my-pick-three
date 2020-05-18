@@ -16,7 +16,7 @@ import { Vue, Component, PropSync } from 'vue-property-decorator'
 import moment from 'moment'
 
 // components
-import { selectTaskModalStore, userTaskInfoStore } from '~/store'
+import { selectTaskModalStore, userTaskInfoStore, authStore } from '~/store'
 import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
 import Panel from '~/components/atoms/Panel.vue'
 
@@ -73,13 +73,19 @@ export default class selectTaskModal extends Vue {
       return
     }
 
-    const taskHistory: ITaskHistory = {
-      taskId: item.itemId,
-      done: false,
-      date: date.toDate()
-    }
-
     try {
+      // TODO: リファクタ
+      const user = authStore.user
+      if (!user) {
+        throw new Error('認証エラー')
+      }
+
+      const taskHistory: ITaskHistory = {
+        user,
+        taskId: item.itemId,
+        done: false,
+        date: date.toDate()
+      }
       const addedHistory = await this.$db.collection('taskHistories').add(taskHistory)
 
       const newTaskHistoriy: ITaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))

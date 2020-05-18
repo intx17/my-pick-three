@@ -88,23 +88,26 @@ export default class Index extends Vue {
       })
       userTaskInfoStore.updateTasks(JSON.parse(JSON.stringify(tasks)))
 
-      if (tasks.length) {
-        const taskIds: string[] = tasks.map(task => task.taskId!)
-        const histories: ITaskHistory[] = []
-        const historiesDocs = await this.$db.collection('taskHistories')
-          .where('taskId', 'in', taskIds)
-          .get()
-        historiesDocs.forEach((doc: any) => {
-          const history: ITaskHistory = {
-            taskId: doc.data().taskId,
-            historyId: doc.id,
-            date: doc.data().date.toDate(),
-            done: doc.data().done
-          }
-          histories.push(history)
-        })
-        userTaskInfoStore.updateTaskHistories(JSON.parse(JSON.stringify(histories)))
-      }
+      const startOfToday = moment().startOf('day')
+      const endOfToday = moment().endOf('day')
+      const histories: ITaskHistory[] = []
+      const historiesDocs = await this.$db.collection('taskHistories')
+        .where('user.email', '==', email)
+        .orderBy('date', 'asc')
+        .startAt(startOfToday.toDate())
+        .endAt(endOfToday.toDate())
+        .get()
+      historiesDocs.forEach((doc: any) => {
+        const history: ITaskHistory = {
+          user: doc.data().user,
+          taskId: doc.data().taskId,
+          historyId: doc.id,
+          date: doc.data().date.toDate(),
+          done: doc.data().done
+        }
+        histories.push(history)
+      })
+      userTaskInfoStore.updateTaskHistories(JSON.parse(JSON.stringify(histories)))
 
       const categories: ICategory[] = []
       const categoryDocs = await this.$db.collection('categories').get()
