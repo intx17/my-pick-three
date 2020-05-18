@@ -54,9 +54,10 @@ export default class selectTaskModal extends Vue {
       return ('タスク情報が不正です')
     }
 
-    const date: string = moment().format('YYYY-MM-DD')
+    const date = moment().startOf('day')
     const duplicateTaskHistory = userTaskInfoStore.taskHistories
-      .find(task => task.taskId === item.itemId && task.date === date)
+      .find(history => history.taskId === item.itemId &&
+        moment(history.date).isSame(date))
 
     if (duplicateTaskHistory) {
       alert('指定のタスクはすでに追加されています')
@@ -64,7 +65,7 @@ export default class selectTaskModal extends Vue {
     }
 
     const taskHistoryCount = userTaskInfoStore.taskHistories
-      .filter(task => task.date === date)
+      .filter(history => moment(history.date).isSame(date))
       .length
 
     if (taskHistoryCount >= 3) {
@@ -75,7 +76,7 @@ export default class selectTaskModal extends Vue {
     const taskHistory: ITaskHistory = {
       taskId: item.itemId,
       done: false,
-      date
+      date: date.toDate()
     }
 
     try {

@@ -18,6 +18,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 
 // components
+import moment from 'moment'
 import ITaskHistory from '../src/entities/task-history'
 import TaskCards from '~/components/molecules/TaskCards.vue'
 import TaskButtons from '~/components/molecules/TaskButtons.vue'
@@ -41,7 +42,7 @@ import ITask from '~/src/entities/task'
 @Component({
   layout: 'default',
   head: {
-    title: 'ホーム'
+    title: 'my-pick-three: home'
   },
   middleware: [
     authenticated
@@ -97,7 +98,7 @@ export default class Index extends Vue {
           const history: ITaskHistory = {
             taskId: doc.data().taskId,
             historyId: doc.id,
-            date: doc.data().date,
+            date: doc.data().date.toDate(),
             done: doc.data().done
           }
           histories.push(history)

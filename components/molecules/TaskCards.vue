@@ -53,10 +53,10 @@ export default class TaskCards extends Vue {
         return card
       })
     const tasks = userTaskInfoStore.tasks
-    const date = moment().format('YYYY-MM-DD')
+    const date = moment().startOf('day')
 
     const cards = userTaskInfoStore.taskHistories
-      .filter(history => history.date === date)
+      .filter(history => moment(history.date).isSame(date))
       .slice(0, 3)
       .reduce((cards: ITaskCard[], history: ITaskHistory) => {
         const task = tasks.find(t => t.taskId === history.taskId)
