@@ -1,19 +1,15 @@
 <template>
   <modal-wrapper :is-active.sync="syncedIsEditModalOpen">
-    <div class="columns is-centered">
-      <div class="column is-11">
-        <div class="box">
-          <text-input-with-label :label-text="'タスク名'" :value.sync="taskName" />
-          <select-dropdown-with-label
-            :selected-value.sync="selectedCategory"
-            :options="selectOptions"
-            :label-text="'カテゴリ'"
-          />
-          <textarea-with-label :label-text="'タスク詳細'" :text.sync="taskDetail" />
-          <div class="field">
-            <info-button-outlined :button-text="'Save'" @click.native="save()" />
-          </div>
-        </div>
+    <div class="box">
+      <text-input-with-label :label-text="'タスク名'" :value.sync="taskName" />
+      <select-dropdown-with-label
+        :selected-value.sync="selectedCategory"
+        :options="selectOptions"
+        :label-text="'カテゴリ'"
+      />
+      <textarea-with-label :label-text="'タスク詳細'" :text.sync="taskDetail" />
+      <div class="field">
+        <info-button-outlined :button-text="'Save'" @click.native="save()" />
       </div>
     </div>
   </modal-wrapper>
@@ -110,3 +106,12 @@ export default class EditTaskModal extends Vue {
   }
 }
 </script>
+
+<style scoped>
+@media screen and (max-width:768px) {
+  .box {
+    /* タブレット・スマホで左右にマージンをつける */
+    margin: 0px 1rem;
+  }
+}
+</style>
