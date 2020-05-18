@@ -5,8 +5,8 @@
       <a
         v-for="(category, index) in categoriesWithAll"
         :key="index"
-        @click="selectCategory(category.categoryId)"
-        :class="{ 'is-active': selectedCategoryId === Number(category.categoryId) }"
+        @click="selectCategory(category.categoryCode)"
+        :class="{ 'is-active': selectedcategoryCode === Number(category.categoryCode) }"
       >
         {{ category.categoryName }}
       </a>
@@ -60,13 +60,13 @@ export default class Panel extends Vue {
 
   private searchWord: string = ''
 
-  private selectedCategoryId: number = 0
+  private selectedcategoryCode: number = 0
 
   get filteredItems () {
-    const categoryItems = this.selectedCategoryId === 0
+    const categoryItems = this.selectedcategoryCode === 0
       ? this.items
       : this.items
-        .filter(item => item.categoryId === this.selectedCategoryId)
+        .filter(item => item.categoryCode === this.selectedcategoryCode)
 
     return categoryItems
       .filter(item => item.itemName.includes(this.searchWord))
@@ -74,20 +74,20 @@ export default class Panel extends Vue {
 
   get categoriesWithAll () {
     const all: ICategory = {
-      categoryId: 0,
+      categoryCode: 0,
       categoryName: '全て'
     }
     const categories = this.categories.slice()
     categories.unshift(all)
     categories.sort((catA, catB) => {
-      return catA.categoryId - catB.categoryId
+      return catA.categoryCode - catB.categoryCode
     })
     return categories
   }
 
   // methods
-  private selectCategory (categoryId: number) {
-    this.selectedCategoryId = categoryId
+  private selectCategory (categoryCode: number) {
+    this.selectedcategoryCode = categoryCode
   }
 
   // 親コンポーネントでDBへの処理を行う

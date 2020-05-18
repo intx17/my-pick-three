@@ -77,7 +77,7 @@ export default class Index extends Vue {
 
       taskDocs.forEach((doc: any) => {
         const task: ITask = {
-          categoryId: doc.data().categoryId,
+          categoryCode: doc.data().categoryCode,
           taskId: doc.id,
           taskName: doc.data().taskName,
           taskDetail: doc.data().taskDetail,
@@ -109,7 +109,7 @@ export default class Index extends Vue {
       const categoryDocs = await this.$db.collection('categories').get()
       categoryDocs.forEach((doc: any) => {
         const c: ICategory = {
-          categoryId: doc.data().categoryId,
+          categoryCode: doc.data().categoryCode,
           categoryName: doc.data().categoryName
         }
         categories.push(c)
@@ -130,7 +130,7 @@ export default class Index extends Vue {
       const panelItems: IPanelItem[] = userTaskInfoStore.tasks
         .map((task: ITask) => {
           const item: IPanelItem = {
-            categoryId: Number(task.categoryId),
+            categoryCode: Number(task.categoryCode),
             itemId: task.taskId!,
             itemName: task.taskName
           }

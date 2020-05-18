@@ -4,6 +4,6 @@ export default interface ITask {
   taskId?: string
   taskName: string,
   taskDetail: string,
-  categoryId: number,
+  categoryCode: number,
   user: IUser
 }

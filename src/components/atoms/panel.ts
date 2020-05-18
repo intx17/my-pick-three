@@ -1,5 +1,5 @@
 export interface IPanelItem {
-  categoryId: number,
+  categoryCode: number,
   itemId: string
   itemName: string
 }

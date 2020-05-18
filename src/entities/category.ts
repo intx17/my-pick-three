@@ -1,4 +1,4 @@
 export default interface ICategory {
-  categoryId: number,
+  categoryCode: number,
   categoryName: string
 }

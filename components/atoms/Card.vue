@@ -6,10 +6,10 @@
       </p>
       <a href="#" class="card-header-icon" aria-label="more options">
         <span v-if="isContentShown" @click="hideContent" class="icon">
-          <fa icon="angle-down" area-hidden="true" />
+          <fa icon="angle-up" area-hidden="true" />
         </span>
         <span v-else @click="showContent" class="icon">
-          <fa icon="angle-up" area-hidden="true" />
+          <fa icon="angle-down" area-hidden="true" />
         </span>
       </a>
     </header>
@@ -43,7 +43,7 @@ import { IClickDoneEmitData } from '~/src/components/atoms/card'
 
 @Component({})
 export default class Card extends Vue {
-  private isContentShown: boolean = true
+  private isContentShown: boolean = false
 
   @Prop({ type: String, required: true })
   private cardId!: string

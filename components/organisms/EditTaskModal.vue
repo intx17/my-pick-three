@@ -56,12 +56,12 @@ export default class EditTaskModal extends Vue {
   get selectOptions (): ISelectOption[] {
     return userTaskInfoStore.categories.slice()
       .sort((catA, catB) => {
-        return catA.categoryId - catB.categoryId
+        return catA.categoryCode - catB.categoryCode
       })
       .map((category: ICategory) => {
         const option: ISelectOption = {
           text: category.categoryName,
-          value: String(category.categoryId)
+          value: String(category.categoryCode)
         }
         return option
       })
@@ -78,7 +78,7 @@ export default class EditTaskModal extends Vue {
       user,
       taskDetail: this.taskDetail,
       taskName: this.taskName,
-      categoryId: Number(this.selectedCategory)
+      categoryCode: Number(this.selectedCategory)
     }
 
     try {
@@ -100,7 +100,7 @@ export default class EditTaskModal extends Vue {
       throw new Error('タスク名を入力してください')
     }
 
-    if (!task.categoryId) {
+    if (!task.categoryCode) {
       throw new Error('カテゴリを入力してください')
     }
   }

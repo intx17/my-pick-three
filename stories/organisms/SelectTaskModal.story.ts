@@ -7,33 +7,33 @@ import ICategory from '~/src/entities/category'
 
 const panelCategories: ICategory[] = [
   {
-    categoryId: 1,
+    categoryCode: 1,
     categoryName: 'cat1'
   },
   {
-    categoryId: 2,
+    categoryCode: 2,
     categoryName: 'cat2'
   }
 ]
 
 const panelItems: IPanelItem[] = [
   {
-    categoryId: 1,
+    categoryCode: 1,
     itemId: 'id1',
     itemName: 'One'
   },
   {
-    categoryId: 2,
+    categoryCode: 2,
     itemId: 'id2',
     itemName: 'Two'
   },
   {
-    categoryId: 3,
+    categoryCode: 3,
     itemId: 'id3',
     itemName: 'Three'
   },
   {
-    categoryId: 4,
+    categoryCode: 4,
     itemId: 'id4',
     itemName: 'Four'
   }

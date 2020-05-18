@@ -1,6 +1,6 @@
 <template>
   <div class="columns is-mobile is-centered">
-    <div class="column is-hal">
+    <div class="column is-half">
       <a
         @click="openSelectModal"
         class="button is-info"
