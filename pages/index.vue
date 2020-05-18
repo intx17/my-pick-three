@@ -75,11 +75,6 @@ export default class Index extends Vue {
         .where('user.email', '==', email)
         .get()
 
-      // TODO: リファクタ
-      if (taskDocs.empty) {
-        return
-      }
-
       taskDocs.forEach((doc: any) => {
         const task: ITask = {
           categoryId: doc.data().categoryId,
@@ -92,21 +87,23 @@ export default class Index extends Vue {
       })
       userTaskInfoStore.updateTasks(JSON.parse(JSON.stringify(tasks)))
 
-      const taskIds: string[] = tasks.map(task => task.taskId!)
-      const histories: ITaskHistory[] = []
-      const historiesDocs = await this.$db.collection('taskHistories')
-        .where('taskId', 'in', taskIds)
-        .get()
-      historiesDocs.forEach((doc: any) => {
-        const history: ITaskHistory = {
-          taskId: doc.data().taskId,
-          historyId: doc.id,
-          date: doc.data().date,
-          done: doc.data().done
-        }
-        histories.push(history)
-      })
-      userTaskInfoStore.updateTaskHistories(JSON.parse(JSON.stringify(histories)))
+      if (tasks) {
+        const taskIds: string[] = tasks.map(task => task.taskId!)
+        const histories: ITaskHistory[] = []
+        const historiesDocs = await this.$db.collection('taskHistories')
+          .where('taskId', 'in', taskIds)
+          .get()
+        historiesDocs.forEach((doc: any) => {
+          const history: ITaskHistory = {
+            taskId: doc.data().taskId,
+            historyId: doc.id,
+            date: doc.data().date,
+            done: doc.data().done
+          }
+          histories.push(history)
+        })
+        userTaskInfoStore.updateTaskHistories(JSON.parse(JSON.stringify(histories)))
+      }
 
       const categories: ICategory[] = []
       const categoryDocs = await this.$db.collection('categories').get()
