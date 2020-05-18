@@ -87,7 +87,7 @@ export default class Index extends Vue {
       })
       userTaskInfoStore.updateTasks(JSON.parse(JSON.stringify(tasks)))
 
-      if (tasks) {
+      if (tasks.length) {
         const taskIds: string[] = tasks.map(task => task.taskId!)
         const histories: ITaskHistory[] = []
         const historiesDocs = await this.$db.collection('taskHistories')
