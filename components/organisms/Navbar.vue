@@ -27,8 +27,8 @@
         <a class="navbar-item" href="/">
           Today
         </a>
-        <a class="navbar-item" href="/">
-          History
+        <a class="navbar-item" href="/chart">
+          Chart
         </a>
       </div>
       <div class="navbar-end">

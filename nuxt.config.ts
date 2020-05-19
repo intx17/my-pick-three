@@ -66,7 +66,8 @@ export default {
   */
   plugins: [
     '~/plugins/firebase',
-    '~/plugins/fontawesome'
+    '~/plugins/fontawesome',
+    '~/plugins/firebase'
   ],
 
   /*

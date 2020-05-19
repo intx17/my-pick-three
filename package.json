@@ -27,10 +27,12 @@
     "@types/firebase": "^3.2.1",
     "@types/storybook__addon-info": "^5.2.1",
     "@types/storybook__addon-knobs": "^5.2.1",
+    "chart.js": "^2.9.3",
     "cross-env": "^5.2.0",
     "moment": "^2.25.3",
     "nuxt": "^2.4.0",
     "nuxt-fontawesome": "^0.4.0",
+    "vue-chartjs": "^3.5.0",
     "vue-property-decorator": "^8.4.2"
   },
   "devDependencies": {
@@ -42,6 +44,7 @@
     "@storybook/addon-knobs": "^5.3.18",
     "@storybook/addons": "^5.3.18",
     "@storybook/vue": "^5.3.18",
+    "@types/chart.js": "^2.9.20",
     "@types/storybook__vue": "^5.2.1",
     "babel-eslint": "^10.0.1",
     "babel-preset-vue": "^2.0.2",
