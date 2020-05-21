@@ -5,7 +5,7 @@ import Panel from '~/components/atoms/Panel.vue'
 import { IPanelItem } from '~/src/components/atoms/panel'
 
 // entities
-import ICategory from '~/src/entities/category'
+import { ICategory } from '~/src/entities/category'
 
 const panelCategories: ICategory[] = [
   {
@@ -20,22 +20,22 @@ const panelCategories: ICategory[] = [
 
 const panelTasks: IPanelItem[] = [
   {
-    categoryCode: 1,
+    categoryId: 'catId1',
     itemId: 'id1',
     itemName: 'One'
   },
   {
-    categoryCode: 2,
+    categoryId: 'catId2',
     itemId: 'id2',
     itemName: 'Two'
   },
   {
-    categoryCode: 3,
+    categoryId: 'catId3',
     itemId: 'id3',
     itemName: 'Three'
   },
   {
-    categoryCode: 4,
+    categoryId: 'catId4',
     itemId: 'id4',
     itemName: 'Four'
   }

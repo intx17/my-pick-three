@@ -3,7 +3,7 @@
     <div class="box">
       <text-input-with-label :label-text="'タスク名'" :value.sync="taskName" />
       <select-dropdown-with-label
-        :selected-value.sync="selectedCategory"
+        :selected-value.sync="selectedCategoryId"
         :options="selectOptions"
         :label-text="'カテゴリ'"
       />
@@ -16,9 +16,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, PropSync } from 'vue-property-decorator'
+import { Vue, Component, PropSync, Emit } from 'vue-property-decorator'
 
 // components
+import { Task } from '../../src/entities/task'
 import TextInputWithLabel from '~/components/atoms/TextInputWithLabel.vue'
 import SelectDropdownWithLabel from '~/components/atoms/SelectDropdownWithLabel.vue'
 import TextareaWithLabel from '~/components/atoms/TextareaWithLabel.vue'
@@ -29,8 +30,8 @@ import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
 import { ISelectOption } from '~/src/components/atoms/select-dropdown'
 
 // entities
-import ITask from '~/src/entities/task'
-import ICategory from '~/src/entities/category'
+import SaveTaskRequest from '~/src/entities/request/save-task'
+import { Category } from '~/src/entities/category'
 
 // store
 import { authStore, userTaskInfoStore } from '~/store'
@@ -50,43 +51,49 @@ export default class EditTaskModal extends Vue {
 
   private taskName: string = ''
   private taskDetail: string = ''
-  private selectedCategory: string = ''
+  private selectedCategoryId: string = ''
 
   // computed
   get selectOptions (): ISelectOption[] {
-    return userTaskInfoStore.categories.slice()
+    return [...userTaskInfoStore.categories]
       .sort((catA, catB) => {
         return catA.categoryCode - catB.categoryCode
       })
-      .map((category: ICategory) => {
+      .map((category: Category) => {
         const option: ISelectOption = {
           text: category.categoryName,
-          value: String(category.categoryCode)
+          value: String(category.categoryId)
         }
         return option
       })
   }
 
-  private save () {
-    const user = authStore.user
+  @Emit()
+  private async save () {
+    const email = authStore.userEmail
 
-    if (!user || !user.email) {
+    if (!email) {
       return false
     }
 
-    const task: ITask = {
-      user,
+    const request: SaveTaskRequest = {
       taskDetail: this.taskDetail,
       taskName: this.taskName,
-      categoryCode: Number(this.selectedCategory)
+      categoryId: this.selectedCategoryId
     }
 
     try {
-      this.validateTaskBeforeSave(task)
+      this.validateSaveRequest(request)
 
-      this.$db.collection('tasks').add(task)
-      const newTasks: ITask[] = JSON.parse(JSON.stringify(userTaskInfoStore.tasks))
-      newTasks.push(task)
+      const addedTaskRef = await this.$db.collection('users').doc(email).collection('tasks').add(request)
+      const addedTask: Task = {
+        taskId: addedTaskRef.id,
+        taskName: request.taskName,
+        taskDetail: request.taskDetail,
+        categoryId: request.categoryId
+      }
+      const newTasks: Task[] = JSON.parse(JSON.stringify(userTaskInfoStore.tasks))
+      newTasks.push(addedTask)
       userTaskInfoStore.updateTasks(newTasks)
 
       this.syncedIsEditModalOpen = false
@@ -95,12 +102,12 @@ export default class EditTaskModal extends Vue {
     }
   }
 
-  private validateTaskBeforeSave (task: ITask) {
-    if (!task.taskName) {
+  private validateSaveRequest (request: SaveTaskRequest) {
+    if (!request.taskName) {
       throw new Error('タスク名を入力してください')
     }
 
-    if (!task.categoryCode) {
+    if (!request.categoryId) {
       throw new Error('カテゴリを入力してください')
     }
   }

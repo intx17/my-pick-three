@@ -21,11 +21,13 @@ import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
 import Panel from '~/components/atoms/Panel.vue'
 
 // components interface
-import { IPanelItem } from '~/src/components/atoms/panel'
+import { IPanelItem, IClickPanelRowEmitData } from '~/src/components/atoms/panel'
 
 // entities
-import ICategory from '~/src/entities/category'
-import ITaskHistory from '~/src/entities/task-history'
+import { Task } from '~/src/entities/task'
+import { Category } from '~/src/entities/category'
+import SaveTaskHisotryRequest from '~/src/entities/request/save-task-history'
+import { TaskHistory } from '~/src/entities/task-history'
 
 @Component({
   components: {
@@ -38,7 +40,7 @@ export default class selectTaskModal extends Vue {
   private syncedIsSelectModalOpen!: boolean
 
   // computed
-  get panelCategories (): ICategory[] {
+  get panelCategories (): Category[] {
     return userTaskInfoStore.categories
   }
 
@@ -47,16 +49,17 @@ export default class selectTaskModal extends Vue {
   }
 
   // methods
-  private async saveTaskHistory (itemId: string) {
-    const item = this.panelItems.find(item => item.itemId === itemId)
+  private async saveTaskHistory (data: IClickPanelRowEmitData) {
+    const task: Task | undefined = userTaskInfoStore.tasks.find(task => task.taskId === data.itemId)
+    const category: Category | undefined = userTaskInfoStore.categories.find(category => category.categoryId === data.categoryId)
 
-    if (!item) {
+    if (!task || !category) {
       return ('タスク情報が不正です')
     }
 
     const date = moment().startOf('day')
     const duplicateTaskHistory = userTaskInfoStore.taskHistories
-      .find(history => history.taskId === item.itemId &&
+      .find(history => history.taskId === task.taskId &&
         moment(history.date).isSame(date))
 
     if (duplicateTaskHistory) {
@@ -74,23 +77,33 @@ export default class selectTaskModal extends Vue {
     }
 
     try {
-      // TODO: リファクタ
-      const user = authStore.user
-      if (!user) {
+      const email = authStore.userEmail
+      if (!email) {
         throw new Error('認証エラー')
       }
 
-      const taskHistory: ITaskHistory = {
-        user,
-        taskId: item.itemId,
+      const request: SaveTaskHisotryRequest = {
+        categoryName: category.categoryName,
+        taskId: task.taskId,
+        taskName: task.taskName,
+        taskDetail: task.taskDetail,
         done: false,
         date: date.toDate()
       }
-      const addedHistory = await this.$db.collection('taskHistories').add(taskHistory)
+      const addedHistoryRef = await this.$db.collection('users').doc(email).collection('taskHistories').add(request)
 
-      const newTaskHistoriy: ITaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))
-      taskHistory.historyId = addedHistory.id
-      newTaskHistoriy.push(taskHistory)
+      const addedHistory: TaskHistory = {
+        historyId: addedHistoryRef.id,
+        categoryName: request.categoryName,
+        taskId: request.taskId,
+        taskName: request.taskName,
+        taskDetail: request.taskDetail,
+        done: request.done,
+        date: request.date
+      }
+
+      const newTaskHistoriy: TaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))
+      newTaskHistoriy.push(addedHistory)
       userTaskInfoStore.updateTaskHistories(newTaskHistoriy)
     } catch (err) {
       console.log(err.message)

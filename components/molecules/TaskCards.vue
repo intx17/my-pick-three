@@ -26,11 +26,11 @@ import Card from '@/components/atoms/Card.vue'
 
 // components interface
 import { ITaskCard } from '~/src/components/molecules/task-cards'
-import ITaskHistory from '~/src/entities/task-history'
+import { TaskHistory } from '~/src/entities/task-history'
 import { IClickDoneEmitData } from '~/src/components/atoms/card'
 
 // store
-import { userTaskInfoStore } from '~/store'
+import { userTaskInfoStore, authStore } from '~/store'
 
 @Component({
   components: {
@@ -40,45 +40,33 @@ import { userTaskInfoStore } from '~/store'
 export default class TaskCards extends Vue {
   // computed
   get taskCards (): ITaskCard[] {
-    const fillTasks: ITaskCard[] = [...Array(3).keys()]
+    const fillTaskCards: ITaskCard[] = [...Array(3).keys()]
       .map((index) => {
         const num = index + 1
         const card = {
           cardId: '',
-          categoryCode: Number.MAX_VALUE,
+          categoryCode: NaN,
           title: `title${num}`,
           detail: `detail${num}`,
           done: false
         }
         return card
       })
-    const tasks = userTaskInfoStore.tasks
     const date = moment().startOf('day')
 
-    const cards = userTaskInfoStore.taskHistories
+    userTaskInfoStore.taskHistories
       .filter(history => moment(history.date).isSame(date))
-      .slice(0, 3)
-      .reduce((cards: ITaskCard[], history: ITaskHistory) => {
-        const task = tasks.find(t => t.taskId === history.taskId)
-
-        if (history.historyId && task) {
-          const card: ITaskCard = {
-            cardId: history.historyId,
-            categoryCode: task.categoryCode,
-            title: task.taskName,
-            detail: task.taskDetail,
-            done: history.done
-          }
-          cards.push(card)
+      .forEach((history: TaskHistory, index: number) => {
+        const card: ITaskCard = {
+          cardId: history.historyId,
+          title: history.taskName,
+          detail: history.taskDetail,
+          done: history.done
         }
+        fillTaskCards[index] = card
+      })
 
-        return cards
-      }, [])
-      .slice(0, 3)
-
-    return cards
-      .concat(fillTasks.slice(cards.length, 3))
-      .sort((cardA, cardB) => cardA.categoryCode - cardB.categoryCode)
+    return fillTaskCards
   }
 
   // methods
@@ -88,10 +76,16 @@ export default class TaskCards extends Vue {
         throw new Error('IDが存在しません')
       }
 
-      this.$db.collection('taskHistories').doc(emitData.cardId)
+      const email = authStore.userEmail
+
+      if (!email) {
+        return false
+      }
+
+      this.$db.collection('users').doc(email).collection('taskHistories').doc(emitData.cardId)
         .update({ done: !emitData.done })
 
-      const newTaskHistories: ITaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))
+      const newTaskHistories: TaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))
       const targetHistoryIndex = newTaskHistories.findIndex(history => history.historyId === emitData.cardId)
       newTaskHistories[targetHistoryIndex].done = !emitData.done
 
@@ -110,7 +104,7 @@ export default class TaskCards extends Vue {
       this.$db.collection('taskHistories').doc(cardId)
         .delete()
 
-      const newTaskHistories: ITaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))
+      const newTaskHistories: TaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))
 
       userTaskInfoStore.updateTaskHistories(newTaskHistories.filter(history => history.historyId !== cardId))
     } catch (err) {

@@ -1,16 +1,7 @@
-export interface ITaskHistory {
-  historyId?: string,
-  taskId: string
-  taskName: string,
-  taskDetail: string,
-  categoryName: string,
-  date: Date,
-  done: boolean
-}
+import { ITaskHistory } from '~/src/entities/task-history'
 
 const defaultValues = (): ITaskHistory => ({
   taskId: '',
-  historyId: undefined,
   taskName: '',
   taskDetail: '',
   categoryName: '',
@@ -18,8 +9,7 @@ const defaultValues = (): ITaskHistory => ({
   done: false
 })
 
-export class TaskHistory implements ITaskHistory {
-  historyId: string
+export default class SaveTaskHistoryRequest implements ITaskHistory {
   taskId: string
   taskName: string
   taskDetail: string
@@ -27,9 +17,8 @@ export class TaskHistory implements ITaskHistory {
   date: Date
   done: boolean
 
-  constructor (init: Partial<TaskHistory> = defaultValues()) {
+  constructor (init: Partial<SaveTaskHistoryRequest> = defaultValues()) {
     const dv = defaultValues()
-    this.historyId = (init.historyId || (dv.historyId || ''))
     this.taskId = (init.taskId || (dv.taskId))
     this.taskName = (init.taskName || dv.taskName)
     this.taskDetail = (init.taskDetail || dv.taskDetail)

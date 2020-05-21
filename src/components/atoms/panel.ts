@@ -1,5 +1,10 @@
 export interface IPanelItem {
-  categoryCode: number,
+  categoryId: string,
   itemId: string
   itemName: string
+}
+
+export interface IClickPanelRowEmitData {
+  categoryId: string,
+  itemId: string
 }

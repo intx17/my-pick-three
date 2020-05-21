@@ -16,10 +16,9 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import moment from 'moment'
 
 // components
-import moment from 'moment'
-import ITaskHistory from '../src/entities/task-history'
 import TaskCards from '~/components/molecules/TaskCards.vue'
 import TaskButtons from '~/components/molecules/TaskButtons.vue'
 import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
@@ -33,11 +32,12 @@ import { IPanelItem } from '~/src/components/atoms/panel'
 import authenticated from '~/middleware/authenticated'
 
 // entities
-import ICategory from '~/src/entities/category'
+import { Category } from '~/src/entities/category'
+import { TaskHistory } from '~/src/entities/task-history'
+import { Task } from '~/src/entities/task'
 
 // store
 import { authStore, selectTaskModalStore, userTaskInfoStore } from '~/store'
-import ITask from '~/src/entities/task'
 
 @Component({
   layout: 'default',
@@ -53,6 +53,44 @@ import ITask from '~/src/entities/task'
     ModalWrapper,
     SelectTaskModal,
     EditTaskModal
+  },
+  async asyncData (context) {
+    try {
+      const email = authStore.userEmail
+
+      if (email == null) {
+        throw new Error('認証情報が不正です')
+      }
+
+      const startOfToday = moment().startOf('day')
+      const endOfToday = moment().endOf('day')
+      const histories: TaskHistory[] = []
+
+      // get today's taskhistory
+      const historiesDocs = await context.app.$db.collection('users')
+        .doc(email)
+        .collection('taskHistories')
+        .orderBy('date', 'asc')
+        .startAt(startOfToday.toDate())
+        .endAt(endOfToday.toDate())
+        .get()
+
+      historiesDocs.forEach((doc: any) => {
+        const history: TaskHistory = {
+          taskId: doc.data().taskId,
+          taskName: doc.data().taskName,
+          taskDetail: doc.data().taskDetail,
+          historyId: doc.id,
+          categoryName: doc.data().categoryName,
+          date: doc.data().date.toDate(),
+          done: doc.data().done
+        }
+        histories.push(history)
+      })
+      userTaskInfoStore.updateTaskHistories(JSON.parse(JSON.stringify(histories)))
+    } catch (err) {
+      window.alert(err)
+    }
   }
 })
 export default class Index extends Vue {
@@ -60,87 +98,72 @@ export default class Index extends Vue {
 
   private isEditModalOpen: boolean = false
 
-  private panelCategories: ICategory[] = []
   private panelItems: IPanelItem[] = []
 
   // methods
-  async created () {
-    try {
-      const email = authStore.user?.email
-      if (!email) {
-        throw new Error('created: 認証情報が不正です')
-      }
-
-      const tasks: ITask[] = []
-      const taskDocs = await this.$db.collection('tasks')
-        .where('user.email', '==', email)
+  private async updateTasks (email: string) {
+    if (!userTaskInfoStore.tasks.length) {
+      const tasks: Task[] = []
+      const taskDocs = await this.$db.collection('users')
+        .doc(email)
+        .collection('tasks')
         .get()
 
+      console.log(taskDocs)
+
       taskDocs.forEach((doc: any) => {
-        const task: ITask = {
-          categoryCode: doc.data().categoryCode,
+        const task: Task = {
+          categoryId: doc.data().categoryId,
           taskId: doc.id,
           taskName: doc.data().taskName,
-          taskDetail: doc.data().taskDetail,
-          user: doc.data().user
+          taskDetail: doc.data().taskDetail
         }
         tasks.push(task)
       })
       userTaskInfoStore.updateTasks(JSON.parse(JSON.stringify(tasks)))
+    }
+  }
 
-      const startOfToday = moment().startOf('day')
-      const endOfToday = moment().endOf('day')
-      const histories: ITaskHistory[] = []
-      const historiesDocs = await this.$db.collection('taskHistories')
-        .where('user.email', '==', email)
-        .orderBy('date', 'asc')
-        .startAt(startOfToday.toDate())
-        .endAt(endOfToday.toDate())
+  private async updateCategories (email: string) {
+    const categories: Category[] = []
+    if (!userTaskInfoStore.categories.length) {
+      const categoryDocs = await this.$db.collection('users')
+        .doc(email)
+        .collection('categories')
         .get()
-      historiesDocs.forEach((doc: any) => {
-        const history: ITaskHistory = {
-          user: doc.data().user,
-          taskId: doc.data().taskId,
-          historyId: doc.id,
-          date: doc.data().date.toDate(),
-          done: doc.data().done
-        }
-        histories.push(history)
-      })
-      userTaskInfoStore.updateTaskHistories(JSON.parse(JSON.stringify(histories)))
-
-      const categories: ICategory[] = []
-      const categoryDocs = await this.$db.collection('categories').get()
       categoryDocs.forEach((doc: any) => {
-        const c: ICategory = {
+        const c: Category = {
+          categoryId: doc.id,
           categoryCode: doc.data().categoryCode,
           categoryName: doc.data().categoryName
         }
         categories.push(c)
       })
       userTaskInfoStore.updateCategories(JSON.parse(JSON.stringify(categories)))
-    } catch (err) {
-      alert(err.message)
     }
   }
 
-  private openSelectModal () {
+  private async openSelectModal () {
     try {
-      const email = authStore.user?.email
+      const email = authStore.userEmail
       if (!email) {
-        throw new Error('openSelectModal: 認証情報が不正です')
+        throw new Error('認証情報が不正です')
       }
+      await this.updateCategories(email)
+      await this.updateTasks(email)
 
-      const panelItems: IPanelItem[] = userTaskInfoStore.tasks
-        .map((task: ITask) => {
-          const item: IPanelItem = {
-            categoryCode: Number(task.categoryCode),
-            itemId: task.taskId!,
-            itemName: task.taskName
-          }
-          return item
-        })
-      selectTaskModalStore.updatePanelItems(JSON.parse(JSON.stringify(panelItems)))
+      if (!selectTaskModalStore.updatePanelItems.length) {
+        const panelItems: IPanelItem[] = userTaskInfoStore.tasks
+          .map((task: Task) => {
+            const item: IPanelItem = {
+              categoryId: task.categoryId,
+              itemId: task.taskId!,
+              itemName: task.taskName
+            }
+            return item
+          })
+        selectTaskModalStore.updatePanelItems(JSON.parse(JSON.stringify(panelItems)))
+      }
 
       this.isSelectModalOpen = true
     } catch (err) {
@@ -148,8 +171,18 @@ export default class Index extends Vue {
     }
   }
 
-  private openEditModal () {
-    this.isEditModalOpen = true
+  private async openEditModal () {
+    try {
+      const email = authStore.userEmail
+      if (!email) {
+        throw new Error('認証情報が不正です')
+      }
+      await this.updateTasks(email)
+      await this.updateCategories(email)
+      this.isEditModalOpen = true
+    } catch (err) {
+      alert(err.message)
+    }
   }
 
   private save (result: boolean) {

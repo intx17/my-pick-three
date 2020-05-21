@@ -1,13 +1,13 @@
 import { Mutation, Action, VuexModule, Module } from 'vuex-module-decorators'
-import ITask from '~/src/entities/task'
-import ITaskHistory from '~/src/entities/task-history'
-import ICategory from '~/src/entities/category'
+import { Task } from '~/src/entities/task'
+import { TaskHistory } from '~/src/entities/task-history'
+import { Category } from '~/src/entities/category'
 
 // state's interface
 export interface IUserTaskInfoStore {
-  tasks: ITask[]
-  taskHistories: ITaskHistory[],
-  categories: ICategory[]
+  tasks: Task[]
+  taskHistories: TaskHistory[],
+  categories: Category[]
 }
 
 @Module({
@@ -17,39 +17,39 @@ export interface IUserTaskInfoStore {
 })
 export default class UserTaskInfoStore extends VuexModule implements IUserTaskInfoStore {
   // state
-  tasks: ITask[] = []
-  taskHistories: ITaskHistory[] = []
-  categories: ICategory[] = []
+  tasks: Task[] = []
+  taskHistories: TaskHistory[] = []
+  categories: Category[] = []
 
   // mutation
   @Mutation
-  public setTasks (tasks: ITask[]) {
+  public setTasks (tasks: Task[]) {
     this.tasks = tasks
   }
 
   @Mutation
-  public setTaskHistories (taskHistories: ITaskHistory[]) {
+  public setTaskHistories (taskHistories: TaskHistory[]) {
     this.taskHistories = taskHistories
   }
 
    @Mutation
-  public setCategories (categories: ICategory[]) {
+  public setCategories (categories: Category[]) {
     this.categories = categories
   }
 
   // actions
   @Action
-   public updateTasks (tasks: ITask[]) {
+   public updateTasks (tasks: Task[]) {
      this.setTasks(tasks)
    }
 
   @Action
-  public updateTaskHistories (taskHistories: ITaskHistory[]) {
+  public updateTaskHistories (taskHistories: TaskHistory[]) {
     this.setTaskHistories(taskHistories)
   }
 
   @Action
-  public updateCategories (categories: ICategory[]) {
+  public updateCategories (categories: Category[]) {
     this.setCategories(categories)
   }
 }

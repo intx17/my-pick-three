@@ -5,8 +5,8 @@
       <a
         v-for="(category, index) in categoriesWithAll"
         :key="index"
-        @click="selectCategory(category.categoryCode)"
-        :class="{ 'is-active': selectedcategoryCode === Number(category.categoryCode) }"
+        @click="selectCategory(category.categoryId)"
+        :class="{ 'is-active': selectedcategoryId === category.categoryId }"
       >
         {{ category.categoryName }}
       </a>
@@ -25,7 +25,7 @@
       </p>
     </div>
     <a
-      @click="selectItem(item.itemId)"
+      @click="selectItem(item.categoryId, item.itemId)"
       v-for="(item, index) in filteredItems"
       :key="index"
       class="panel-block"
@@ -42,10 +42,10 @@
 import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
 
 // components interface
-import { IPanelItem } from '~/src/components/atoms/panel'
+import { IPanelItem, IClickPanelRowEmitData } from '~/src/components/atoms/panel'
 
 // entities
-import ICategory from '~/src/entities/category'
+import { Category } from '~/src/entities/category'
 
 @Component({})
 export default class Panel extends Vue {
@@ -53,48 +53,51 @@ export default class Panel extends Vue {
   private title!: string
 
   @Prop({ type: Array, required: true })
-  private categories!: ICategory[]
+  private categories!: Category[]
 
   @Prop({ type: Array, required: true })
   private items!: IPanelItem[]
 
   private searchWord: string = ''
 
-  private selectedcategoryCode: number = 0
+  private selectedcategoryId: string = 'all'
 
   get filteredItems () {
-    const categoryItems = this.selectedcategoryCode === 0
+    const categoryItems = this.selectedcategoryId === 'all'
       ? this.items
       : this.items
-        .filter(item => item.categoryCode === this.selectedcategoryCode)
+        .filter(item => item.categoryId === this.selectedcategoryId)
 
     return categoryItems
       .filter(item => item.itemName.includes(this.searchWord))
-      .sort()
   }
 
   get categoriesWithAll () {
-    const all: ICategory = {
-      categoryCode: 0,
-      categoryName: '全て'
-    }
-    const categories = this.categories.slice()
-    categories.unshift(all)
-    categories.sort((catA, catB) => {
-      return catA.categoryCode - catB.categoryCode
-    })
+    const categories = [...this.categories]
+    categories
+      .sort((catA, catB) => {
+        return catA.categoryCode - catB.categoryCode
+      })
+      .unshift({
+        categoryId: 'all',
+        categoryName: '全て',
+        categoryCode: 0
+      })
     return categories
   }
 
   // methods
-  private selectCategory (categoryCode: number) {
-    this.selectedcategoryCode = categoryCode
+  private selectCategory (categoryId: string) {
+    this.selectedcategoryId = categoryId
   }
 
   // 親コンポーネントでDBへの処理を行う
   @Emit()
-  private selectItem (itemId: string) {
-    return itemId
+  private selectItem (categoryId: string, itemId: string): IClickPanelRowEmitData {
+    return {
+      categoryId,
+      itemId
+    }
   }
 }
 </script>

@@ -1,5 +1,5 @@
 import { Mutation, Action, VuexModule, Module } from 'vuex-module-decorators'
-import IUser from '~/src/entities/user'
+import { IUser } from '~/src/entities/user'
 
 // state's interface
 export interface IAuthStore {
@@ -18,6 +18,10 @@ export default class AuthStore extends VuexModule implements IAuthStore {
   token: string = window.localStorage.getItem('token') || ''
 
   // gettes
+  get userEmail (): string | null {
+    return this.user?.email || null
+  }
+
   get isLoggedIn (): boolean {
     return this.user !== null
   }

@@ -15,7 +15,7 @@ import LineChart from '~/components/organisms/LineChart.vue'
 
 // middlewares
 import authenticated from '~/middleware/authenticated'
-import { authStore } from '~/store'
+import { authStore, userTaskInfoStore } from '~/store'
 
 @Component({
   layout: 'default',
@@ -32,27 +32,37 @@ import { authStore } from '~/store'
     try {
       const email = authStore.user?.email
       if (!email) {
-        throw new Error('created: 認証情報が不正です')
+        throw new Error('認証情報が不正です')
       }
 
       const startOfSevenDaysBefore = moment().add(-7, 'day').startOf('day')
       const endOfToday = moment().endOf('day')
 
       const countMap: Map<string, number> = new Map<string, number>()
-      const historiesDocs = await context.app.$db.collection('taskHistories')
-        .where('user.email', '==', email)
-        .where('done', '==', true)
-        .orderBy('date', 'asc')
-        .startAt(startOfSevenDaysBefore.toDate())
-        .endAt(endOfToday.toDate())
-        .get()
-      historiesDocs.forEach((doc: any) => {
-        console.log(doc.data().date)
-        const label = moment(doc.data().date.toDate()).format('MM/DD')
-        countMap.has(label)
-          ? countMap.set(label, countMap.get(label)! + 1)
-          : countMap.set(label, 1)
-      })
+      if (userTaskInfoStore.taskHistories.length) {
+        userTaskInfoStore.taskHistories.forEach((history) => {
+          const label = moment(history.date).format('MM/DD')
+          countMap.has(label)
+            ? countMap.set(label, countMap.get(label)! + 1)
+            : countMap.set(label, 1)
+        })
+      } else {
+        const historiesDocs = await context.app.$db.collection('users')
+          .doc(email)
+          .collection('taskHistories')
+          .where('done', '==', true)
+          .orderBy('date', 'asc')
+          .startAt(startOfSevenDaysBefore.toDate())
+          .endAt(endOfToday.toDate())
+          .get()
+
+        historiesDocs.forEach((doc: any) => {
+          const label = moment(doc.data().date.toDate()).format('MM/DD')
+          countMap.has(label)
+            ? countMap.set(label, countMap.get(label)! + 1)
+            : countMap.set(label, 1)
+        })
+      }
       const chartData: ChartData = {
         labels: [...countMap.keys()],
         datasets: [
@@ -67,7 +77,17 @@ import { authStore } from '~/store'
       }
       const chartOption: ChartOptions = {
         // アスペクト比を固定しないように変更
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+        scales: { // 軸設定
+          yAxes: [{ // y軸設定
+            ticks: { // 最大値最小値設定
+              stepSize: 1,
+              beginAtZero: true,
+              min: 0, // 最小値
+              max: 3 // 最大値
+            }
+          }]
+        }
       }
       const chartStyles = {
         height: '100%',
@@ -79,6 +99,7 @@ import { authStore } from '~/store'
         chartStyles
       }
     } catch (err) {
+      console.log(err)
       window.alert(err)
     }
   }
