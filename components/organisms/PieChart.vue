@@ -2,10 +2,10 @@
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import Chart from 'chart.js'
 
-import { Line, mixins } from 'vue-chartjs'
+import { Pie, mixins } from 'vue-chartjs'
 
 @Component({})
-export default class LineChart extends Mixins(Line, mixins.reactiveProp) {
+export default class PieChart extends Mixins(Pie, mixins.reactiveProp) {
   @Prop({ type: Object, required: true, default: {} })
   chartData!: Chart.ChartData
 

@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <LineChart :chartData="chartData" :options="chartOption" :styles="chartStyles" />
+    <LineChart :chartData="lineChartData" :options="lineChartOption" :styles="lineChartStyles" />
+    <PieChart :chartData="pieChartData" :options="pieChartOption" :styles="pieChartStyles" />
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import { ChartData, ChartOptions } from 'chart.js'
 
 // components
 import LineChart from '~/components/organisms/LineChart.vue'
+import PieChart from '~/components/organisms/PieChart.vue'
 
 // middlewares
 import authenticated from '~/middleware/authenticated'
@@ -26,7 +28,8 @@ import { authStore, userTaskInfoStore } from '~/store'
     authenticated
   ],
   components: {
-    LineChart
+    LineChart,
+    PieChart
   },
   async asyncData (context) {
     try {
@@ -39,12 +42,18 @@ import { authStore, userTaskInfoStore } from '~/store'
       const endOfToday = moment().endOf('day')
 
       const countMap: Map<string, number> = new Map<string, number>()
+      const categoryMap: Map<string, number> = new Map<string, number>()
+
       if (userTaskInfoStore.taskHistories.length) {
         userTaskInfoStore.taskHistories.forEach((history) => {
-          const label = moment(history.date).format('MM/DD')
-          countMap.has(label)
-            ? countMap.set(label, countMap.get(label)! + 1)
-            : countMap.set(label, 1)
+          const dayLabel = moment(history.date).format('MM/DD')
+          countMap.has(dayLabel)
+            ? countMap.set(dayLabel, countMap.get(dayLabel)! + 1)
+            : countMap.set(dayLabel, 1)
+
+          categoryMap.has(history.categoryName)
+            ? categoryMap.set(history.categoryName, categoryMap.get(history.categoryName)! + 1)
+            : categoryMap.set(history.categoryName, 1)
         })
       } else {
         const historiesDocs = await context.app.$db.collection('users')
@@ -57,13 +66,19 @@ import { authStore, userTaskInfoStore } from '~/store'
           .get()
 
         historiesDocs.forEach((doc: any) => {
-          const label = moment(doc.data().date.toDate()).format('MM/DD')
-          countMap.has(label)
-            ? countMap.set(label, countMap.get(label)! + 1)
-            : countMap.set(label, 1)
+          const dayLabel = moment(doc.data().date.toDate()).format('MM/DD')
+          countMap.has(dayLabel)
+            ? countMap.set(dayLabel, countMap.get(dayLabel)! + 1)
+            : countMap.set(dayLabel, 1)
+
+          const categoryName = doc.data().categoryName
+          categoryMap.has(categoryName)
+            ? categoryMap.set(categoryName, categoryMap.get(categoryName)! + 1)
+            : categoryMap.set(categoryName, 1)
         })
       }
-      const chartData: ChartData = {
+
+      const lineChartData: ChartData = {
         labels: [...countMap.keys()],
         datasets: [
           {
@@ -75,7 +90,7 @@ import { authStore, userTaskInfoStore } from '~/store'
           }
         ]
       }
-      const chartOption: ChartOptions = {
+      const lineChartOption: ChartOptions = {
         // アスペクト比を固定しないように変更
         maintainAspectRatio: false,
         scales: { // 軸設定
@@ -89,17 +104,43 @@ import { authStore, userTaskInfoStore } from '~/store'
           }]
         }
       }
-      const chartStyles = {
-        height: '100%',
+      const lineChartStyles = {
+        height: '35vh',
+        width: '100%',
+        'margin-bottom': '20px'
+      }
+
+      const pieChartData: ChartData = {
+        labels: [...categoryMap.keys()],
+        datasets: [
+          {
+            type: 'pie',
+            data: [...categoryMap.values()],
+            backgroundColor: ['#f87979', '#aa4c8f', '#38b48b', '#006e54', '#c1e4e9', '#89c3eb', '#c3d825']
+          }
+        ]
+      }
+      const pieChartOption: ChartOptions = {
+        // アスペクト比を固定しないように変更
+        maintainAspectRatio: false,
+        cutoutPercentage: 50,
+        legend: {
+          position: 'bottom'
+        }
+      }
+      const pieChartStyles = {
+        height: '40vh',
         width: '100%'
       }
       return {
-        chartData,
-        chartOption,
-        chartStyles
+        lineChartData,
+        lineChartOption,
+        lineChartStyles,
+        pieChartData,
+        pieChartOption,
+        pieChartStyles
       }
     } catch (err) {
-      console.log(err)
       window.alert(err)
     }
   }
