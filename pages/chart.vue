@@ -107,7 +107,7 @@ import { authStore, userTaskInfoStore } from '~/store'
       const lineChartStyles = {
         height: '35vh',
         width: '100%',
-        'margin-bottom': '20px'
+        'margin-bottom': '10px'
       }
 
       const pieChartData: ChartData = {
@@ -129,7 +129,7 @@ import { authStore, userTaskInfoStore } from '~/store'
         }
       }
       const pieChartStyles = {
-        height: '40vh',
+        height: '35vh',
         width: '100%'
       }
       return {
