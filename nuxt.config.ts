@@ -87,7 +87,6 @@ export default {
   ** Axios module configuration
   */
   axios: {
-    baseURL: process.env.DATABASE_URL
     baseURL: process.env.BASE_URL,
     proxy: true
   },
