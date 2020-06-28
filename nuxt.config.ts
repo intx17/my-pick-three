@@ -32,13 +32,12 @@ export default {
       { hid: 'description', name: 'description', content: 'my-pick-three' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/my-pick-three/favicon.ico' }
     ]
   },
   router: {
-    // middleware: ['authMiddleWare']
+    base: '/my-pick-three/'
   },
-
   /*
   ** Customize the progress-bar color
   */
