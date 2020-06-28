@@ -25,12 +25,14 @@ import { Vue, Component } from 'vue-property-decorator'
 import Card from '@/components/atoms/Card.vue'
 
 // components interface
+import UpdateTaskHistoryRequest from '../../src/entities/request/update-task-history'
 import { ITaskCard } from '~/src/components/molecules/task-cards'
 import { TaskHistory } from '~/src/entities/task-history'
 import { IClickDoneEmitData } from '~/src/components/atoms/card'
 
 // store
 import { userTaskInfoStore, authStore } from '~/store'
+import DeleteTaskHistoryRequest from '~/src/entities/request/delete-task-history'
 
 @Component({
   components: {
@@ -70,7 +72,7 @@ export default class TaskCards extends Vue {
   }
 
   // methods
-  private clickDone (emitData: IClickDoneEmitData) {
+  private async clickDone (emitData: IClickDoneEmitData) {
     try {
       if (!emitData.cardId) {
         throw new Error('IDが存在しません')
@@ -82,9 +84,13 @@ export default class TaskCards extends Vue {
         return false
       }
 
-      this.$db.collection('users').doc(email).collection('taskHistories').doc(emitData.cardId)
-        .update({ done: !emitData.done })
+      const request: UpdateTaskHistoryRequest = {
+        email,
+        historyId: emitData.cardId,
+        done: !emitData.done
+      }
 
+      await this.$axios.$put('/api/updateTaskHistory', request)
       const newTaskHistories: TaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))
       const targetHistoryIndex = newTaskHistories.findIndex(history => history.historyId === emitData.cardId)
       newTaskHistories[targetHistoryIndex].done = !emitData.done
@@ -95,14 +101,23 @@ export default class TaskCards extends Vue {
     }
   }
 
-  private clickRemove (cardId: string) {
+  private async clickRemove (cardId: string) {
     try {
       if (!cardId) {
         throw new Error('IDが存在しません')
       }
 
-      this.$db.collection('taskHistories').doc(cardId)
-        .delete()
+      const email = authStore.userEmail
+      if (!email) {
+        return false
+      }
+
+      const request: DeleteTaskHistoryRequest = {
+        email,
+        historyId: cardId
+      }
+
+      await this.$axios.$delete('/api/deleteTaskHistory', { data: request })
 
       const newTaskHistories: TaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))
 

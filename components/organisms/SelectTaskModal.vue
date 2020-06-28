@@ -28,6 +28,7 @@ import { Task } from '~/src/entities/task'
 import { Category } from '~/src/entities/category'
 import SaveTaskHisotryRequest from '~/src/entities/request/save-task-history'
 import { TaskHistory } from '~/src/entities/task-history'
+import SaveTaskHistoryResponse from '~/src/entities/response/save-task-history'
 
 @Component({
   components: {
@@ -83,23 +84,29 @@ export default class selectTaskModal extends Vue {
       }
 
       const request: SaveTaskHisotryRequest = {
+        email,
         categoryName: category.categoryName,
         taskId: task.taskId,
         taskName: task.taskName,
         taskDetail: task.taskDetail,
         done: false,
-        date: date.toDate()
+        dateStr: date.format('YYYY-MM-DD')
       }
-      const addedHistoryRef = await this.$db.collection('users').doc(email).collection('taskHistories').add(request)
+
+      const response: SaveTaskHistoryResponse = await this.$axios.$put<SaveTaskHistoryResponse>('/api/saveTaskHistory', request)
+      if (!response.historyId) {
+        // FIXME
+        throw new Error('レスポンス不正')
+      }
 
       const addedHistory: TaskHistory = {
-        historyId: addedHistoryRef.id,
+        historyId: response.historyId,
         categoryName: request.categoryName,
         taskId: request.taskId,
         taskName: request.taskName,
         taskDetail: request.taskDetail,
         done: request.done,
-        date: request.date
+        date: date.toDate()
       }
 
       const newTaskHistoriy: TaskHistory[] = JSON.parse(JSON.stringify(userTaskInfoStore.taskHistories))

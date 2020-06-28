@@ -16,9 +16,14 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import moment from 'moment'
 
 // components
+import SearchTaskRequest from '../src/entities/request/search-task'
+import SearchTaskResponse from '../src/entities/response/search-task'
+import SearchTaskHistoryResponse from '../src/entities/response/search-task-history'
+import SearchTaskHistoryRequest from '../src/entities/request/search-task-history'
+import SearchCategoryResponse from '../src/entities/response/search-category'
+import SearchCategoryRequest from '../src/entities/request/search-category'
 import TaskCards from '~/components/molecules/TaskCards.vue'
 import TaskButtons from '~/components/molecules/TaskButtons.vue'
 import ModalWrapper from '~/components/organisms/ModalWrapper.vue'
@@ -32,8 +37,6 @@ import { IPanelItem } from '~/src/components/atoms/panel'
 import authenticated from '~/middleware/authenticated'
 
 // entities
-import { Category } from '~/src/entities/category'
-import { TaskHistory } from '~/src/entities/task-history'
 import { Task } from '~/src/entities/task'
 
 // store
@@ -61,33 +64,11 @@ import { authStore, selectTaskModalStore, userTaskInfoStore } from '~/store'
       if (email == null) {
         throw new Error('認証情報が不正です')
       }
-
-      const startOfToday = moment().startOf('day')
-      const endOfToday = moment().endOf('day')
-      const histories: TaskHistory[] = []
-
-      // get today's taskhistory
-      const historiesDocs = await context.app.$db.collection('users')
-        .doc(email)
-        .collection('taskHistories')
-        .orderBy('date', 'asc')
-        .startAt(startOfToday.toDate())
-        .endAt(endOfToday.toDate())
-        .get()
-
-      historiesDocs.forEach((doc: any) => {
-        const history: TaskHistory = {
-          taskId: doc.data().taskId,
-          taskName: doc.data().taskName,
-          taskDetail: doc.data().taskDetail,
-          historyId: doc.id,
-          categoryName: doc.data().categoryName,
-          date: doc.data().date.toDate(),
-          done: doc.data().done
-        }
-        histories.push(history)
-      })
-      userTaskInfoStore.updateTaskHistories(JSON.parse(JSON.stringify(histories)))
+      const request: SearchTaskHistoryRequest = {
+        email
+      }
+      const response: SearchTaskHistoryResponse = await context.$axios.$post<SearchTaskHistoryResponse>('/api/searchTaskHistory', request)
+      userTaskInfoStore.updateTaskHistories(JSON.parse(JSON.stringify(response.taskHistories)))
     } catch (err) {
       window.alert(err)
     }
@@ -103,43 +84,21 @@ export default class Index extends Vue {
   // methods
   private async updateTasks (email: string) {
     if (!userTaskInfoStore.tasks.length) {
-      const tasks: Task[] = []
-      const taskDocs = await this.$db.collection('users')
-        .doc(email)
-        .collection('tasks')
-        .get()
-
-      console.log(taskDocs)
-
-      taskDocs.forEach((doc: any) => {
-        const task: Task = {
-          categoryId: doc.data().categoryId,
-          taskId: doc.id,
-          taskName: doc.data().taskName,
-          taskDetail: doc.data().taskDetail
-        }
-        tasks.push(task)
+      const request: SearchTaskRequest = ({
+        email
       })
-      userTaskInfoStore.updateTasks(JSON.parse(JSON.stringify(tasks)))
+      const response: SearchTaskResponse = await this.$axios.$post<SearchTaskResponse>('/api/searchTask', request)
+      userTaskInfoStore.updateTasks(JSON.parse(JSON.stringify(response.tasks)))
     }
   }
 
   private async updateCategories (email: string) {
-    const categories: Category[] = []
     if (!userTaskInfoStore.categories.length) {
-      const categoryDocs = await this.$db.collection('users')
-        .doc(email)
-        .collection('categories')
-        .get()
-      categoryDocs.forEach((doc: any) => {
-        const c: Category = {
-          categoryId: doc.id,
-          categoryCode: doc.data().categoryCode,
-          categoryName: doc.data().categoryName
-        }
-        categories.push(c)
+      const request: SearchCategoryRequest = ({
+        email
       })
-      userTaskInfoStore.updateCategories(JSON.parse(JSON.stringify(categories)))
+      const response: SearchCategoryResponse = await this.$axios.$post<SearchCategoryResponse>('/api/searchCategory', request)
+      userTaskInfoStore.updateCategories(JSON.parse(JSON.stringify(response.categories)))
     }
   }
 

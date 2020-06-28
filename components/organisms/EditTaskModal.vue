@@ -20,6 +20,7 @@ import { Vue, Component, PropSync, Emit } from 'vue-property-decorator'
 
 // components
 import { Task } from '../../src/entities/task'
+import SaveTaskResponse from '../../functions/src/entities/response/save-task'
 import TextInputWithLabel from '~/components/atoms/TextInputWithLabel.vue'
 import SelectDropdownWithLabel from '~/components/atoms/SelectDropdownWithLabel.vue'
 import TextareaWithLabel from '~/components/atoms/TextareaWithLabel.vue'
@@ -77,6 +78,7 @@ export default class EditTaskModal extends Vue {
     }
 
     const request: SaveTaskRequest = {
+      email,
       taskDetail: this.taskDetail,
       taskName: this.taskName,
       categoryId: this.selectedCategoryId
@@ -85,9 +87,14 @@ export default class EditTaskModal extends Vue {
     try {
       this.validateSaveRequest(request)
 
-      const addedTaskRef = await this.$db.collection('users').doc(email).collection('tasks').add(request)
+      const response: SaveTaskResponse = await this.$axios.$put<SaveTaskResponse>('/api/saveTask', request)
+      // FIXME
+      if (!response.taskId) {
+        throw new Error('taskId不正')
+      }
+
       const addedTask: Task = {
-        taskId: addedTaskRef.id,
+        taskId: response.taskId,
         taskName: request.taskName,
         taskDetail: request.taskDetail,
         categoryId: request.categoryId
