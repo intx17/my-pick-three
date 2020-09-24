@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar is-fixed-bottom is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="/">
+      <nuxt-link class="navbar-item" to="/">
         my-pick-three
-      </a>
+      </nuxt-link>
       <a
         :class="burgerClass"
         @click="toggleBurgerActiveness"
@@ -24,12 +24,12 @@
       class="navbar-menu"
     >
       <div class="navbar-start">
-        <a class="navbar-item" href="/">
+        <nuxt-link class="navbar-item" to="/">
           Today
-        </a>
-        <a class="navbar-item" href="/chart">
+        </nuxt-link>
+        <nuxt-link class="navbar-item" to="/chart">
           Chart
-        </a>
+        </nuxt-link>
       </div>
       <div class="navbar-end">
         <div class="navbar-item">
